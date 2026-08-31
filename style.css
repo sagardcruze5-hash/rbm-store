@@ -201,24 +201,55 @@ body { background-color: #f4f6f9; color: #333; }
 
 
 
+/* ১. কন্টেইনারে overflow hidden দিন যাতে কোণাগুলো সুন্দর দেখায় */
+.search-container {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    max-width: 800px;
+    margin: 0 20px;
+    height: 40px; /* একটি নির্দিষ্ট উচ্চতা দিন */
+}
+
+/* ২. ড্রপডাউনের নির্দিষ্ট সাইজ সেট করুন */
 .country-dropdown {
     background-color: #f3f3f3;
     border: none;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #ccc;
     border-radius: 6px 0 0 6px;
-    padding: 12px 10px;
+    padding: 0 10px;
+    height: 100%;
+    width: 140px;
+    max-width: 140px;
     font-size: 13px;
     font-weight: 600;
     color: #333;
     cursor: pointer;
     outline: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.country-dropdown:hover {
-    background-color: #e2e2e2;
-}
-
-/* কান্ট্রি ড্রপডাউন যুক্ত হওয়ার কারণে ইনপুট বক্সের বামপাশের কোণা সোজা করা হলো */
+/* ৩. ইনপুট বক্সের কোণা সোজা করুন এবং উচ্চতা ম্যাচ করুন */
 .search-container input {
-    border-radius: 0 !important;
+    width: 100%;
+    height: 100%;
+    padding: 0 15px;
+    border: none;
+    border-radius: 0 !important; /* ড্রপডাউনের পাশে গোল কোণা থাকবে না */
+    outline: none;
+    font-size: 15px;
+}
+
+/* ৪. বাটনের উচ্চতাও ঠিক রাখুন */
+.search-container button {
+    height: 100%;
+    background: #f59e0b;
+    border: none;
+    padding: 0 20px;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #111827;
+    font-size: 15px;
 }
