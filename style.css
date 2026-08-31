@@ -44,10 +44,32 @@ body { background-color: #f4f6f9; color: #333; }
 .product-card .buy-btn:hover { background: #d97706; color: #fff; }
 
 /* Footer & Colorful Credit */
-.main-footer { background: #111827; color: #9ca3af; padding: 40px 20px 20px; margin-top: 50px; }
-.footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-.footer-sec h3 { color: white; margin-bottom: 15px; font-size: 18px; }
-.footer-sec p { font-size: 14px; line-height: 1.6; }
-.footer-bottom { text-align: center; border-top: 1px solid #374151; margin-top: 30px; padding-top: 20px; font-size: 13px; }
-.developer-credit { margin-top: 8px; font-size: 14px; font-weight: bold; color: #d1d5db; }
-.developer-credit span { background: linear-gradient(90deg, #f59e0b, #ec4899, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 15px; }
+/* Contact Section Styling */
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.contact-icon {
+    font-size: 18px;
+    background: #374151;
+    padding: 6px 8px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-sec a {
+    color: #f59e0b;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.footer-sec a:hover {
+    text-decoration: underline;
+    color: #fbbf24;
+}
