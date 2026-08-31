@@ -165,32 +165,33 @@ body { background-color: #f4f6f9; color: #333; }
     }
 }
 
-/* সার্চ বার সিএসএস */
+/* সার্চ বার সিএসএস (বড় ও রেসপনসিভ) */
 .search-container {
     display: flex;
     align-items: center;
     flex: 1;
-    max-width: 400px;
-    margin: 0 15px;
+    max-width: 800px;
+    margin: 0 20px;
 }
 
 .search-container input {
     width: 100%;
-    padding: 8px 12px;
+    padding: 12px 15px;
     border: none;
-    border-radius: 4px 0 0 4px;
+    border-radius: 6px 0 0 6px;
     outline: none;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .search-container button {
     background: #f59e0b;
     border: none;
-    padding: 8px 15px;
-    border-radius: 0 4px 4px 0;
+    padding: 12px 20px;
+    border-radius: 0 6px 6px 0;
     cursor: pointer;
     font-weight: bold;
     color: #111827;
+    font-size: 15px;
 }
 
 .search-container button:hover {
