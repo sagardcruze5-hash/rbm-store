@@ -201,15 +201,7 @@ body { background-color: #f4f6f9; color: #333; }
 
 
 
-/* ১. কন্টেইনারে overflow hidden দিন যাতে কোণাগুলো সুন্দর দেখায় */
-.search-container {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 800px;
-    margin: 0 20px;
-    height: 40px; /* একটি নির্দিষ্ট উচ্চতা দিন */
-}
+
 
 /* ২. ড্রপডাউনের নির্দিষ্ট সাইজ সেট করুন */
 .country-dropdown {
