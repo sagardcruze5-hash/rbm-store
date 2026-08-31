@@ -205,22 +205,21 @@ body { background-color: #f4f6f9; color: #333; }
 
 /* --- Country Dropdown Menu Style --- */
 .country-dropdown {
-    background-color: #f3f3f3;
+   background-color: #f3f3f3;
     border: none;
     border-right: 1px solid #ccc;
     border-radius: 4px 0 0 4px;
     padding: 0 10px;
     height: 100%;
-    width: 200px;
-    max-width: 200px;
+    width: 140px;
+    max-width: 140px;
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 400;
     color: #333;
     cursor: pointer;
     outline: none;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
 
 /* মাউস নিলে ব্যাকগ্রাউন্ড পরিবর্তন */
 .country-dropdown:hover {
