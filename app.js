@@ -118,12 +118,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-document.getElementById('search-btn').addEventListener('click', function() {
-    const selectedCountry = document.getElementById('country-select').value;
-    const searchQuery = document.getElementById('search-input').value.trim();
-
-    // ফিল্টার লজিক
-    console.log(`Searching for "${searchQuery}" in country: ${selectedCountry}`);
-    
-    // আপনার প্রোডাক্ট ফিল্টার ফাংশন থাকলে এখানে selectedCountry অনুযায়ী ডাটা ফিল্টার করতে পারবেন
-});
