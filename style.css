@@ -197,3 +197,28 @@ body { background-color: #f4f6f9; color: #333; }
 .search-container button:hover {
     background: #d97706;
 }
+
+
+
+
+.country-dropdown {
+    background-color: #f3f3f3;
+    border: none;
+    border-right: 1px solid #ddd;
+    border-radius: 6px 0 0 6px;
+    padding: 12px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+}
+
+.country-dropdown:hover {
+    background-color: #e2e2e2;
+}
+
+/* কান্ট্রি ড্রপডাউন যুক্ত হওয়ার কারণে ইনপুট বক্সের বামপাশের কোণা সোজা করা হলো */
+.search-container input {
+    border-radius: 0 !important;
+}
