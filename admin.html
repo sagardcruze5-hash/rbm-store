@@ -1,25 +1,89 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RBM STORE - Admin Panel</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container { max-width: 900px; margin: 30px auto; padding: 20px; }
+        .admin-card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 30px; }
+        .admin-card h2 { margin-bottom: 15px; color: #111827; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        .btn-submit { background: #f59e0b; color: #111; font-weight: bold; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; }
+        .btn-submit:hover { background: #d97706; color: white; }
+    </style>
 </head>
 <body>
+    <header class="main-header">
+        <div class="logo">RBM <span>STORE Panel</span></div>
+        <a href="index.html" style="color:white; text-decoration:none;">View Website</a>
+    </header>
 
     <div class="admin-container">
-        <h2>Add Amazon Affiliate Product</h2>
-        <form id="add-product-form">
-            <input type="text" id="p-title" placeholder="Product Title" required>
-            <input type="text" id="p-price" placeholder="Price (e.g. $25.00)" required>
-            <input type="url" id="p-image" placeholder="Image Direct URL" required>
-            <textarea id="p-desc" placeholder="Product Short Description" rows="4" required></textarea>
-            <input type="url" id="p-link" placeholder="Amazon Affiliate Link" required>
-            <button type="submit">Upload Product</button>
-        </form>
+        <!-- 1. Add Product Section -->
+        <div class="admin-card">
+            <h2>📦 Add New Product</h2>
+            <form id="admin-product-form">
+                <div class="form-group">
+                    <label>Product Title</label>
+                    <input type="text" id="p-title" required placeholder="e.g. Wireless Headset">
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="text" id="p-price" required placeholder="e.g. $40 or ৳4500">
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="url" id="p-image" required placeholder="https://media-amazon.com/images/...">
+                </div>
+                <div class="form-group">
+                    <label>Amazon Affiliate Link</label>
+                    <input type="url" id="p-link" required placeholder="https://amazon.com/dp/...">
+                </div>
+                <button type="submit" class="btn-submit">➕ Upload Product</button>
+            </form>
+        </div>
+
+        <!-- 2. Navigation Bar & Sidebar Links Management -->
+        <div class="admin-card">
+            <h2>🔗 Add Navigation Links</h2>
+            <form id="admin-nav-form">
+                <div class="form-group">
+                    <label>Link Title</label>
+                    <input type="text" id="nav-title" required placeholder="e.g. Gaming Gear">
+                </div>
+                <div class="form-group">
+                    <label>Link URL</label>
+                    <input type="text" id="nav-url" required placeholder="e.g. #gaming or custom link">
+                </div>
+                <button type="submit" class="btn-submit" style="background:#3b82f6; color:white;">➕ Add Link</button>
+            </form>
+        </div>
+
+        <!-- 3. Edit Footer Details -->
+        <div class="admin-card">
+            <h2>📝 Edit Footer Sections</h2>
+            <form id="admin-footer-form">
+                <div class="form-group">
+                    <label>About Us Text</label>
+                    <textarea id="foot-about" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Privacy Policy Text</label>
+                    <textarea id="foot-privacy" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Contact Us Text</label>
+                    <textarea id="foot-contact" rows="2"></textarea>
+                </div>
+                <button type="submit" class="btn-submit" style="background:#10b981; color:white;">💾 Save Footer Updates</button>
+            </form>
+        </div>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
