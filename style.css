@@ -51,3 +51,116 @@ body { background-color: #f4f6f9; color: #333; }
 .footer-bottom { text-align: center; border-top: 1px solid #374151; margin-top: 30px; padding-top: 20px; font-size: 13px; }
 .developer-credit { margin-top: 8px; font-size: 14px; font-weight: bold; color: #d1d5db; }
 .developer-credit span { background: linear-gradient(90deg, #f59e0b, #ec4899, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 15px; }
+
+
+
+
+
+
+
+/* --- Amazon Style Header Extensions --- */
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #131921; /* ডার্ক আমাজন থিম */
+    padding: 10px 20px;
+    color: white;
+}
+
+/* নেভিগেশন মার্জিন অ্যাডজাস্টমেন্ট */
+.nav-bar {
+    margin-right: auto;
+    margin-left: 30px;
+}
+
+.nav-bar a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-right: 18px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.nav-bar a:hover {
+    color: #f59e0b;
+}
+
+/* ডানপাশের টুলস কন্ট্রোল */
+.header-right-tools {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-nav-item {
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 1.2;
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+
+.header-nav-item:hover {
+    border-color: #ffffff;
+}
+
+.nav-line-1 {
+    color: #ccc;
+    font-size: 11px;
+}
+
+.nav-line-2 {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+/* কার্ট আইকন ডিজাইন */
+.header-cart-item {
+    display: flex;
+    align-items: flex-end;
+    color: #ffffff;
+    text-decoration: none;
+    gap: 5px;
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+
+.header-cart-item:hover {
+    border-color: #ffffff;
+}
+
+.cart-icon-wrap {
+    position: relative;
+    font-size: 24px;
+}
+
+.cart-count {
+    position: absolute;
+    top: -2px;
+    left: 10px;
+    color: #f59e0b;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.cart-label {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 2px;
+}
+
+
+@media (max-width: 768px) {
+    .header-right-tools {
+        gap: 8px;
+    }
+    .nav-line-1 {
+        display: none; /* মোবাইলে শুধু বড় লেখাটা দেখাবে */
+    }
+}
