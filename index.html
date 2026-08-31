@@ -7,56 +7,65 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Header with Logo & Dynamic Navigation -->
+    <!-- Top Header -->
     <header class="main-header">
-        <div class="logo">RBM <span>STORE</span></div>
-        <nav class="nav-bar">
+        <div class="header-left">
+            <div class="logo">RBM <span>STORE</span></div>
+        </div>
+        
+        <!-- Live Real Search Bar -->
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search products on RBM Store...">
+            <button id="search-btn">Search</button>
+        </div>
+
+        <nav class="nav-bar" id="main-nav">
             <a href="index.html">Home</a>
             <a href="#about">About Us</a>
             <a href="#privacy">Privacy Policy</a>
             <a href="#contact">Contact</a>
-            <span id="custom-nav-links"></span>
         </nav>
     </header>
 
-    <!-- Main Container -->
+    <!-- Site Body Layout -->
     <div class="site-container">
-        <!-- Main Content (6-Column Grid) -->
-        <main class="content-area">
-            <h2 class="section-title">Featured Products</h2>
-            <div id="product-list" class="product-grid"></div>
-        </main>
-
-        <!-- Right Side Vertical Navigation Bar -->
+        <!-- Left Side Vertical Navigation Frame -->
         <aside class="side-nav">
-            <h3>Quick Categories</h3>
+            <h3>Categories</h3>
             <ul id="sidebar-menu">
                 <li><a href="#">🔥 Hot Deals</a></li>
                 <li><a href="#">⚡ Best Sellers</a></li>
                 <li><a href="#">🆕 New Arrivals</a></li>
             </ul>
         </aside>
+
+        <!-- Main Product Section -->
+        <main class="content-area">
+            <h2 class="section-title">Featured Products</h2>
+            <div id="product-list" class="product-grid"></div>
+        </main>
     </div>
 
-    <!-- Professional Footer -->
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-sec" id="about">
                 <h3>About Us</h3>
-                <p>Welcome to RBM STORE. We curate the absolute best products and top deals directly from Amazon for your daily needs.</p>
+                <p id="footer-about-text">Welcome to RBM STORE. We curate top deals directly from Amazon for your daily needs.</p>
             </div>
             <div class="footer-sec" id="privacy">
                 <h3>Privacy Policy</h3>
-                <p>We respect your privacy. As an Amazon Associate, we earn from qualifying purchases with zero extra cost to you.</p>
+                <p id="footer-privacy-text">We respect your privacy. As an Amazon Associate, we earn from qualifying purchases with zero extra cost to you.</p>
             </div>
             <div class="footer-sec" id="contact">
                 <h3>Contact Us</h3>
-                <p>Email: support@rbmstore.com</p>
-                <p>Follow us on social media for daily updates.</p>
+                <p id="footer-contact-text">Email: support@rbmstore.com</p>
             </div>
         </div>
+        
         <div class="footer-bottom">
-            &copy; 2026 RBM STORE. All Rights Reserved.
+            <p>&copy; 2026 RBM STORE. All Rights Reserved.</p>
+            <p class="developer-credit">A Website by <span>Sagar Anthony Dcruze</span></p>
         </div>
     </footer>
 
