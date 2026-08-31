@@ -209,11 +209,11 @@ body { background-color: #f4f6f9; color: #333; }
     border: none;
     border-right: 1px solid #ccc;
     border-radius: 4px 0 0 4px;
-    padding: 0 2px;
+    padding: 0 30px;
     height: 50%;
     width: 140px;
     max-width: 140px;
-    font-size: 13px;
+    font-size: 30px;
     font-weight: 300;
     color: #333;
     cursor: pointer;
