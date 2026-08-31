@@ -3,19 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RBM STORE - Best Amazon Deals</title>
+    <title>RBM STORE - Premium Shopping</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>RBM STORE</h1>
-        <p>Best Amazon Deals & Products</p>
+    <!-- Header with Logo & Dynamic Navigation -->
+    <header class="main-header">
+        <div class="logo">RBM <span>STORE</span></div>
+        <nav class="nav-bar">
+            <a href="index.html">Home</a>
+            <a href="#about">About Us</a>
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#contact">Contact</a>
+            <span id="custom-nav-links"></span>
+        </nav>
     </header>
 
-    <main>
-        <h2>Featured Products</h2>
-        <div id="product-list" class="product-grid"></div>
-    </main>
+    <!-- Main Container -->
+    <div class="site-container">
+        <!-- Main Content (6-Column Grid) -->
+        <main class="content-area">
+            <h2 class="section-title">Featured Products</h2>
+            <div id="product-list" class="product-grid"></div>
+        </main>
+
+        <!-- Right Side Vertical Navigation Bar -->
+        <aside class="side-nav">
+            <h3>Quick Categories</h3>
+            <ul id="sidebar-menu">
+                <li><a href="#">🔥 Hot Deals</a></li>
+                <li><a href="#">⚡ Best Sellers</a></li>
+                <li><a href="#">🆕 New Arrivals</a></li>
+            </ul>
+        </aside>
+    </div>
+
+    <!-- Professional Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-sec" id="about">
+                <h3>About Us</h3>
+                <p>Welcome to RBM STORE. We curate the absolute best products and top deals directly from Amazon for your daily needs.</p>
+            </div>
+            <div class="footer-sec" id="privacy">
+                <h3>Privacy Policy</h3>
+                <p>We respect your privacy. As an Amazon Associate, we earn from qualifying purchases with zero extra cost to you.</p>
+            </div>
+            <div class="footer-sec" id="contact">
+                <h3>Contact Us</h3>
+                <p>Email: support@rbmstore.com</p>
+                <p>Follow us on social media for daily updates.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 RBM STORE. All Rights Reserved.
+        </div>
+    </footer>
 
     <script src="app.js"></script>
 </body>
