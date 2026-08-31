@@ -203,3 +203,47 @@ body { background-color: #f4f6f9; color: #333; }
 
 
 
+/* --- Country Dropdown Menu Style --- */
+.country-dropdown {
+    background-color: #f3f3f3;
+    border: none;
+    border-right: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+    padding: 0 10px;
+    height: 100%;
+    width: 140px;
+    max-width: 140px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* মাউস নিলে ব্যাকগ্রাউন্ড পরিবর্তন */
+.country-dropdown:hover {
+    background-color: #e2e2e2;
+}
+
+/* ফোকাস অবস্থায় ব্যাকগ্রাউন্ড ও বর্ডার */
+.country-dropdown:focus {
+    background-color: #ffffff;
+}
+
+/* অপশন লিস্ট ডিজাইন (ভিজিটরদের সহজে স্ক্রোল করে সিলেক্ট করার জন্য) */
+.country-dropdown option {
+    background-color: #ffffff;
+    color: #111111;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+/* অপশনের ওপর মাউস রাখলে কালার */
+.country-dropdown option:hover,
+.country-dropdown option:checked {
+    background-color: #f59e0b !important;
+    color: #ffffff !important;
+}
