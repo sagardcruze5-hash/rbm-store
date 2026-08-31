@@ -8,24 +8,42 @@
 </head>
 <body>
     <!-- Top Header -->
-    <header class="main-header">
-        <div class="header-left">
-            <div class="logo">RBM <span>STORE</span></div>
-        </div>
-        
-        <!-- Live Real Search Bar -->
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search products on RBM Store...">
-            <button id="search-btn">Search</button>
-        </div>
+  <header class="main-header">
+    <!-- ১. লোগো (বামপাশে থাকবে) -->
+    <div class="logo">RBM <span>STORE</span></div>
 
-        <nav class="nav-bar" id="main-nav">
-            <a href="index.html">Home</a>
-            <a href="#about">About Us</a>
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+    <!-- ২. নেভিগেশন মেনু (মাঝামাঝি বাঁদিকে থাকবে) -->
+    <nav class="nav-bar">
+        <a href="index.html">Home</a>
+        <a href="#about">About Us</a>
+        <a href="#privacy">Privacy Policy</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <!-- ৩. ডানপাশের অ্যামাজন স্টাইল অপশন -->
+    <div class="header-right-tools">
+        <!-- Account Block -->
+        <a href="#" class="header-nav-item">
+            <span class="nav-line-1">Hello, sign in</span>
+            <span class="nav-line-2">Account & Lists ▾</span>
+        </a>
+
+        <!-- Orders Block -->
+        <a href="#" class="header-nav-item">
+            <span class="nav-line-1">Returns</span>
+            <span class="nav-line-2">& Orders</span>
+        </a>
+
+        <!-- Cart Block -->
+        <a href="#" class="header-cart-item">
+            <div class="cart-icon-wrap">
+                🛒
+                <span class="cart-count">0</span>
+            </div>
+            <span class="cart-label">Cart</span>
+        </a>
+    </div>
+</header>
 
     <!-- Site Body Layout -->
     <div class="site-container">
