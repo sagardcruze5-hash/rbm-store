@@ -130,17 +130,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// Firebase Console থেকে নেওয়া আপনার প্রজেক্টের সঠিক কনফিগারেশন
+
+// ১. ফায়ারবেস কনফিগারেশন (আপনার আসল প্রজেক্ট ডাটা)
 const firebaseConfig = {
-  apiKey: "YOUR_ACTUAL_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyA7itgqaCU1EZAgfO-SccODzDEBvSP5nEE",
+  authDomain: "rbm-store-458c8.firebaseapp.com",
+  projectId: "rbm-store-458c8",
+  storageBucket: "rbm-store-458c8.firebasestorage.app",
+  messagingSenderId: "415572875433",
+  appId: "1:415572875433:web:e2b856af421b636bb271b8",
+  measurementId: "G-GDR5R78Y6D"
 };
 
-// Firebase Initialize
+// ২. Firebase চালুকরণ
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
@@ -148,43 +150,96 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// ১. একাউন্ট তৈরি ফাংশন
+// ৩. DOM Content Loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const productList = document.getElementById('product-list');
+
+    // Firestore থেকে ক্লাউড ডাটা রিয়েল-টাইমে লোড
+    db.collection("products").onSnapshot((snapshot) => {
+        let products = [];
+        snapshot.forEach((doc) => {
+            products.push({ id: doc.id, ...doc.data() });
+        });
+        displayProducts(products);
+    }, (error) => {
+        console.error("প্রোডাক্ট লোড করতে সমস্যা:", error);
+    });
+
+    function displayProducts(productsToRender) {
+        if (!productList) return;
+        if (productsToRender.length === 0) {
+            productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No products found!</p>';
+        } else {
+            productList.innerHTML = productsToRender.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.title}" onerror="this.src='https://via.placeholder.com/150'">
+                    <h3>${product.title}</h3>
+                    <p class="price">${product.price}</p>
+                    <a href="${product.link}" target="_blank" class="buy-btn">Buy on Amazon</a>
+                </div>
+            `).join('');
+        }
+    }
+
+    // Admin Panel: প্রোডাক্ট এড করা
+    const pForm = document.getElementById('admin-product-form');
+    if (pForm) {
+        pForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newP = {
+                title: document.getElementById('p-title').value,
+                price: document.getElementById('p-price').value,
+                image: document.getElementById('p-image').value,
+                link: document.getElementById('p-link').value,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            db.collection("products").add(newP)
+            .then(() => {
+                alert('Product Added to Cloud Successfully!');
+                pForm.reset();
+            })
+            .catch(err => alert("Error adding product: " + err.message));
+        });
+    }
+});
+
+// ৪. টেস্ট বাটনের জন্য ফাংশন
 function testSignUp() {
   const email = document.getElementById("testEmail").value;
   const password = document.getElementById("testPassword").value;
 
   if(!email || !password) {
-    alert("ইমেইল এবং পাসওয়ার্ড লিখুন!");
+    alert("ইমেইল ও পাসওয়ার্ড লিখুন!");
     return;
   }
 
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      alert("অ্যাকাউন্ট তৈরি সফল হয়েছে! User ID: " + userCredential.user.uid);
+      alert("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! User ID: " + userCredential.user.uid);
     })
     .catch((error) => {
-      alert("সাইন-আপ সমস্যা: " + error.message);
+      alert("ত্রুটি: " + error.message);
     });
 }
 
-// ২. ডাটা সেভ ফাংশন
 function testSaveData() {
   const user = auth.currentUser;
 
   if (user) {
     db.collection("users").doc(user.uid).set({
-      storeName: "RBM Store",
+      storeName: "RBMN Store",
+      cart: ["Product A", "Product B"],
       userEmail: user.email,
-      cart: ["Sample Product 1"],
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
     })
     .then(() => {
-      alert("ডাটা ফায়ারবেসে সফলভাবে সেভ হয়েছে!");
+      alert("অভিনন্দন! ডাটা ফায়ারবেসে সফলভাবে সেভ হয়েছে।");
     })
     .catch((error) => {
-      alert("ডাটা সেভ সমস্যা: " + error.message);
+      alert("ডাটা সেভ হতে সমস্যা: " + error.message);
     });
   } else {
-    alert("আগে '১. একাউন্ট তৈরি করুন' বাটনে চাপ দিন!");
+    alert("আগে ১ নম্বর বাটনে চাপ দিয়ে একাউন্ট তৈরি বা লগইন করুন!");
   }
 }
