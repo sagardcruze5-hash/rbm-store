@@ -395,19 +395,19 @@
 
 
 
-    <!-- Login / Register Modal -->
+ <!-- Login / Register Modal -->
 <div id="auth-modal" class="modal-overlay" style="display: none;">
   <div class="modal-box">
-    <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+    <span class="close-btn" id="close-modal-btn">&times;</span>
     
     <!-- Tab Switches -->
     <div class="auth-tabs">
-      <button id="tab-login-btn" class="active" onclick="switchTab('login')">Login</button>
-      <button id="tab-register-btn" onclick="switchTab('register')">Register</button>
+      <button id="tab-login-btn" class="active" type="button">Login</button>
+      <button id="tab-register-btn" type="button">Register</button>
     </div>
 
     <!-- Login Form -->
-    <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+    <form id="login-form" class="auth-form">
       <h3>Welcome Back</h3>
       <input type="email" id="login-email" placeholder="Email Address" required>
       <input type="password" id="login-password" placeholder="Password" required>
@@ -415,7 +415,7 @@
     </form>
 
     <!-- Register Form -->
-    <form id="register-form" class="auth-form" style="display: none;" onsubmit="handleRegister(event)">
+    <form id="register-form" class="auth-form" style="display: none;">
       <h3>Create Account</h3>
       <input type="text" id="reg-name" placeholder="Full Name" required>
       <input type="email" id="reg-email" placeholder="Email Address" required>
@@ -424,8 +424,14 @@
     </form>
   </div>
 </div>
-<script src="app.js"></script>
 
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<!-- App logic -->
+<script src="app.js"></script>
 
 
 
