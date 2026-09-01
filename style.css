@@ -246,3 +246,37 @@ body { background-color: #f4f6f9; color: #333; }
     background-color: #f59e0b !important;
     color: #ffffff !important;
 }
+
+
+
+
+
+
+    /* Modal Positioning Correction */
+.modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.6) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 99999 !important;
+}
+
+/* Hide modal when display is none */
+.modal-overlay[style*="display: none"] {
+    display: none !important;
+}
+
+.modal-box {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    position: relative;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
