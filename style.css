@@ -252,31 +252,41 @@ body { background-color: #f4f6f9; color: #333; }
 
 
 
-    /* Modal Positioning Correction */
+
+
+
+
+/* FORCE MODAL POPUP */
 .modal-overlay {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    background: rgba(0, 0, 0, 0.6) !important;
-    display: flex !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.75) !important;
     justify-content: center !important;
     align-items: center !important;
-    z-index: 99999 !important;
-}
-
-/* Hide modal when display is none */
-.modal-overlay[style*="display: none"] {
-    display: none !important;
+    z-index: 999999 !important;
 }
 
 .modal-box {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 8px;
-    position: relative;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    background: #ffffff !important;
+    padding: 30px !important;
+    border-radius: 10px !important;
+    position: relative !important;
+    width: 90% !important;
+    max-width: 400px !important;
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5) !important;
+    color: #333 !important;
+}
+
+.close-btn {
+    position: absolute !important;
+    top: 10px !important;
+    right: 15px !important;
+    font-size: 28px !important;
+    cursor: pointer !important;
+    color: #333 !important;
 }
