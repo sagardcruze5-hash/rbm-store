@@ -48,7 +48,7 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
     outline: none;
     text-overflow: ellipsis;
     white-space: nowrap;
-} /* <-- এখানে আগের কোডে ব্র্যাকেট মিসিং ছিল */
+}
 
 .country-dropdown:hover { background-color: #e2e2e2; }
 .country-dropdown:focus { background-color: #ffffff; }
@@ -98,11 +98,7 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
 }
 
 
-
-
-
-
-/* AUTH MODAL STYLING (MODERN COLORFUL LOOK) */
+/* MODERN GREEN PREMIUM AUTH MODAL */
 .modal-overlay {
     display: none;
     position: fixed !important;
@@ -110,8 +106,8 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
     left: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    background: rgba(17, 24, 39, 0.8) !important; /* ডার্ক গ্লাস ইফেক্ট */
-    backdrop-filter: blur(8px) !important; /* ব্যাকগ্রাউন্ড ব্লার */
+    background: rgba(15, 23, 42, 0.75) !important;
+    backdrop-filter: blur(8px) !important;
     z-index: 999999 !important;
     justify-content: center !important;
     align-items: center !important;
@@ -121,115 +117,141 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
     display: flex !important;
 }
 
+/* মডাল বক্স - সাইজ বড় ও আধুনিক সবুজ থিম */
 .modal-box {
     background: #ffffff !important;
-    padding: 30px !important;
-    border-radius: 16px !important;
-    width: 90% !important;
-    max-width: 420px !important;
+    padding: 40px 35px !important;
+    border-radius: 20px !important;
+    width: 92% !important;
+    max-width: 480px !important;
     position: relative !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(245, 158, 11, 0.2) !important;
+    box-shadow: 0 20px 50px rgba(5, 150, 105, 0.25) !important;
     border: 2px solid transparent !important;
-    background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #f59e0b, #ec4899, #3b82f6) !important;
+    background-image: linear-gradient(#fff, #fff), linear-gradient(135deg, #10b981, #059669, #047857) !important;
     background-origin: border-box !important;
     background-clip: padding-box, border-box !important;
-    animation: popupAnim 0.3s ease-out forwards;
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-/* পপ-আপ অ্যানিমেশন */
-@keyframes popupAnim {
-    from { transform: scale(0.8); opacity: 0; }
+@keyframes modalPop {
+    from { transform: scale(0.85); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
 
 /* ক্লোজ বাটন */
 .close-btn {
     position: absolute !important;
-    top: 15px !important;
-    right: 20px !important;
-    font-size: 24px !important;
+    top: 18px !important;
+    right: 22px !important;
+    font-size: 26px !important;
     font-weight: bold !important;
     cursor: pointer !important;
-    color: #6b7280 !important;
-    transition: 0.2s !important;
-}
-.close-btn:hover {
-    color: #ef4444 !important;
-    transform: rotate(90deg);
+    color: #9ca3af !important;
+    transition: all 0.2s ease !important;
+    line-height: 1 !important;
 }
 
-/* ট্যাব বাটন (Login / Register) */
+.close-btn:hover {
+    color: #ef4444 !important;
+    transform: rotate(90deg) scale(1.1);
+}
+
+/* ট্যাব বাটন (Login / Register Switcher) */
 .auth-tabs {
     display: flex !important;
-    gap: 10px !important;
-    margin-bottom: 25px !important;
-    background: #f3f4f6 !important;
-    padding: 5px !important;
-    border-radius: 10px !important;
+    gap: 8px !important;
+    margin-bottom: 30px !important;
+    background: #f0fdf4 !important;
+    padding: 6px !important;
+    border-radius: 12px !important;
+    border: 1px solid #dcfce7 !important;
 }
 
 .auth-tabs button {
     flex: 1 !important;
-    padding: 10px !important;
+    padding: 12px !important;
     border: none !important;
     background: transparent !important;
     font-weight: 700 !important;
-    font-size: 14px !important;
-    color: #4b5563 !important;
-    border-radius: 8px !important;
+    font-size: 15px !important;
+    color: #047857 !important;
+    border-radius: 9px !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
 }
 
 .auth-tabs button.active {
-    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    background: linear-gradient(135deg, #10b981, #059669) !important;
     color: #ffffff !important;
-    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35) !important;
 }
 
-/* ইনপুট ফিল্ড ও ফর্ম ডিজাইন */
+/* ফর্ম ও লেবেল ডিজাইন */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+}
+
 .auth-form h3 {
     text-align: center !important;
-    font-size: 20px !important;
+    font-size: 24px !important;
     font-weight: 800 !important;
-    margin-bottom: 20px !important;
-    background: linear-gradient(90deg, #111827, #3b82f6) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
+    margin-bottom: 22px !important;
+    color: #065f46 !important;
+    letter-spacing: -0.5px;
+}
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
 }
 
 .auth-form input {
     width: 100% !important;
-    padding: 12px 15px !important;
-    margin-bottom: 15px !important;
+    padding: 14px 16px !important;
     border: 1.5px solid #e5e7eb !important;
-    border-radius: 8px !important;
-    font-size: 14px !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
     outline: none !important;
-    transition: 0.2s !important;
+    transition: all 0.2s ease !important;
+    background-color: #f9fafb;
 }
 
 .auth-form input:focus {
-    border-color: #f59e0b !important;
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2) !important;
+    background-color: #ffffff !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
 }
 
-/* প্রাইমারি সাবমিট বাটন */
+/* প্রাইমারি গ্রিন বাটন */
 .auth-btn {
     width: 100% !important;
-    padding: 12px !important;
+    padding: 14px !important;
+    margin-top: 10px !important;
     border: none !important;
-    border-radius: 8px !important;
-    background: linear-gradient(135deg, #f59e0b, #ec4899) !important;
+    border-radius: 10px !important;
+    background: linear-gradient(135deg, #10b981, #047857) !important;
     color: white !important;
-    font-weight: bold !important;
-    font-size: 15px !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
     cursor: pointer !important;
-    transition: transform 0.2s, box-shadow 0.2s !important;
-    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3) !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 6px 16px rgba(5, 150, 105, 0.3) !important;
 }
 
 .auth-btn:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 15px rgba(236, 72, 153, 0.4) !important;
+    box-shadow: 0 8px 22px rgba(5, 150, 105, 0.4) !important;
+    background: linear-gradient(135deg, #059669, #065f46) !important;
+}
+
+.auth-btn:active {
+    transform: translateY(0) !important;
 }
