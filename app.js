@@ -122,9 +122,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-// Firebase Console থেকে পাওয়া কনফিগারেশন অবজেক্ট
+
+
+
+
+
+
+
+
+// Firebase Console থেকে নেওয়া আপনার প্রজেক্টের সঠিক কনফিগারেশন
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "YOUR_ACTUAL_API_KEY",
   authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
   projectId: "YOUR_PROJECT_ID",
   storageBucket: "YOUR_PROJECT_ID.appspot.com",
@@ -132,111 +140,51 @@ const firebaseConfig = {
   appId: "YOUR_APP_ID"
 };
 
-// Firebase চালুকরণ
-firebase.initializeApp(firebaseConfig);
+// Firebase Initialize
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-
-
-
-
-
-function registerUser(email, password, userName) {
-  auth.createUserWithEmailAndPassword(email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      
-      // Firestore ডাটাবেজে ইউজার প্রোফাইল সেভ
-      return db.collection("users").doc(user.uid).set({
-        name: userName,
-        email: email,
-        cart: [],
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-    })
-    .then(() => {
-      console.log("ইউজার সফলভাবে রেজিস্টার্ড এবং ডাটা সেভ হয়েছে!");
-    })
-    .catch((error) => {
-      console.error("ত্রুটি:", error.message);
-    });
-}
-
-
-
-
-
-
-
-// ইউজার সাইন-ইন ফাংশন
-function loginUser(email, password) {
-  auth.signInWithEmailAndPassword(email, password)
-    .catch((error) => {
-      console.error("লগইন ব্যর্থ:", error.message);
-    });
-}
-
-// যেকোনো ডিভাইস থেকে লগইন করলেই ডাটা লোড হওয়ার লিসেনার
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    console.log("লগইন করা ইউজার ID:", user.uid);
-    
-    // ডাটাবেজ থেকে রিয়েল-টাইম ডাটা রিড করা
-    db.collection("users").doc(user.uid)
-      .onSnapshot((doc) => {
-        if (doc.exists) {
-          const userData = doc.data();
-          console.log("ইউজার ডাটা:", userData);
-          // এখানে UI আপডেট করার ফাংশন কল করুন
-        }
-      });
-  } else {
-    console.log("কোনো ইউজার লগইন নেই");
-  }
-});
-
-
-
-
-
-
-
-
-// ১. নতুন ইউজার রেজিস্টার করার ফাংশন
+// ১. একাউন্ট তৈরি ফাংশন
 function testSignUp() {
   const email = document.getElementById("testEmail").value;
   const password = document.getElementById("testPassword").value;
 
+  if(!email || !password) {
+    alert("ইমেইল এবং পাসওয়ার্ড লিখুন!");
+    return;
+  }
+
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      alert("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! User ID: " + userCredential.user.uid);
+      alert("অ্যাকাউন্ট তৈরি সফল হয়েছে! User ID: " + userCredential.user.uid);
     })
     .catch((error) => {
-      alert("ত্রুটি: " + error.message);
+      alert("সাইন-আপ সমস্যা: " + error.message);
     });
 }
 
-// ২. লগইন করা ইউজারের ডাটা সেভ করার ফাংশন
+// ২. ডাটা সেভ ফাংশন
 function testSaveData() {
   const user = auth.currentUser;
 
   if (user) {
-    // ইউজারের নিজস্ব আইডির অধীনে ডাটা সেভ হবে (নতুন সিকিউরিটি রুলস অনুযায়ী)
     db.collection("users").doc(user.uid).set({
-      storeName: "RBMN Store",
-      cart: ["Product A", "Product B"],
+      storeName: "RBM Store",
       userEmail: user.email,
-      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+      cart: ["Sample Product 1"],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     })
     .then(() => {
-      alert("অভিনন্দন! ডাটা ফায়ারবেসে সফলভাবে সেভ হয়েছে।");
+      alert("ডাটা ফায়ারবেসে সফলভাবে সেভ হয়েছে!");
     })
     .catch((error) => {
-      alert("ডাটা সেভ হতে সমস্যা: " + error.message);
+      alert("ডাটা সেভ সমস্যা: " + error.message);
     });
   } else {
-    alert("আগে ১ নম্বর বাটনে চাপ দিয়ে একাউন্ট তৈরি বা লগইন করুন!");
+    alert("আগে '১. একাউন্ট তৈরি করুন' বাটনে চাপ দিন!");
   }
 }
