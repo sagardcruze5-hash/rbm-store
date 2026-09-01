@@ -256,37 +256,46 @@ body { background-color: #f4f6f9; color: #333; }
 
 
 
-/* FORCE MODAL POPUP */
+/* Fix Footer Space & Modal Popup */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Modal Styling */
 .modal-overlay {
+    display: none; /* ডিফল্টভাবে লুকানো থাকবে */
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    background-color: rgba(0, 0, 0, 0.75) !important;
-    justify-content: center !important;
-    align-items: center !important;
+    background: rgba(0, 0, 0, 0.7) !important;
     z-index: 999999 !important;
+    justify-content: center;
+    align-items: center;
+}
+
+/* যখন active ক্লাস যুক্ত হবে তখন স্ক্রিনের মাঝখানে আসবে */
+.modal-overlay.active {
+    display: flex !important;
 }
 
 .modal-box {
-    background: #ffffff !important;
-    padding: 30px !important;
-    border-radius: 10px !important;
-    position: relative !important;
+    background: #fff !important;
+    padding: 25px !important;
+    border-radius: 8px !important;
     width: 90% !important;
     max-width: 400px !important;
-    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5) !important;
-    color: #333 !important;
+    position: relative !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3) !important;
 }
 
 .close-btn {
-    position: absolute !important;
-    top: 10px !important;
-    right: 15px !important;
-    font-size: 28px !important;
-    cursor: pointer !important;
-    color: #333 !important;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
 }
