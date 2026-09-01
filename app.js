@@ -243,3 +243,111 @@ function testSaveData() {
     alert("আগে ১ নম্বর বাটনে চাপ দিয়ে একাউন্ট তৈরি বা লগইন করুন!");
   }
 }
+
+
+
+
+
+
+// --- Modal & Authentication UI Handler ---
+document.addEventListener('DOMContentLoaded', () => {
+  const authBtn = document.getElementById('auth-trigger-btn');
+  const authModal = document.getElementById('auth-modal');
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  
+  const tabLoginBtn = document.getElementById('tab-login-btn');
+  const tabRegisterBtn = document.getElementById('tab-register-btn');
+  const loginForm = document.getElementById('login-form');
+  const registerForm = document.getElementById('register-form');
+
+  // ১. মডাল ওপেন ও ক্লোজ
+  if (authBtn) {
+    authBtn.addEventListener('click', () => {
+      authModal.style.display = 'flex';
+    });
+  }
+
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', () => {
+      authModal.style.display = 'none';
+    });
+  }
+
+  // ২. ট্যাব সুইচ (Login / Register)
+  if (tabLoginBtn && tabRegisterBtn) {
+    tabLoginBtn.addEventListener('click', () => {
+      loginForm.style.display = 'flex';
+      registerForm.style.display = 'none';
+      tabLoginBtn.classList.add('active');
+      tabRegisterBtn.classList.remove('active');
+    });
+
+    tabRegisterBtn.addEventListener('click', () => {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'flex';
+      tabRegisterBtn.classList.add('active');
+      tabLoginBtn.classList.remove('active');
+    });
+  }
+
+  // ৩. রেজিস্টার ফর্ম সাবমিট
+  if (registerForm) {
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value;
+      const email = document.getElementById('reg-email').value;
+      const password = document.getElementById('reg-password').value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          return db.collection('users').doc(user.uid).set({
+            name: name,
+            email: email,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        })
+        .then(() => {
+          alert('Account created successfully!');
+          authModal.style.display = 'none';
+        })
+        .catch((error) => {
+          alert('Registration Error: ' + error.message);
+        });
+    });
+  }
+
+  // ৪. লগইন ফর্ম সাবমিট
+  if (loginForm) {
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          alert('Logged in successfully!');
+          authModal.style.display = 'none';
+        })
+        .catch((error) => {
+          alert('Login Error: ' + error.message);
+        });
+    });
+  }
+});
+
+// ৫. ইউজারের স্ট্যাটাস অনুযায়ী হেডারের নাম আপডেট
+auth.onAuthStateChanged((user) => {
+  const userText = document.getElementById('user-display-name');
+  if (user) {
+    db.collection('users').doc(user.uid).get().then((doc) => {
+      if (doc.exists && doc.data().name) {
+        userText.innerText = `Hello, ${doc.data().name}`;
+      } else {
+        userText.innerText = `Hello, ${user.email.split('@')[0]}`;
+      }
+    });
+  } else {
+    if (userText) userText.innerText = 'Hello, sign in';
+  }
+});
