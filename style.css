@@ -1,211 +1,39 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-body { background-color: #f4f6f9; color: #333; }
+html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; color: #333; }
 
 /* Header Styling */
-.main-header { display: flex; justify-content: space-between; align-items: center; background: #111827; color: white; padding: 15px 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 15px; }
+.main-header { display: flex; align-items: center; justify-content: space-between; background: #131921; color: white; padding: 10px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 15px; }
 .logo { font-size: 24px; font-weight: 800; color: #fff; }
 .logo span { color: #f59e0b; }
 
-/* Search Bar (Yellow Accent Focus) */
-.search-container { display: flex; flex: 1; max-width: 500px; margin: 0 20px; }
-.search-container input { width: 100%; padding: 10px 15px; border: 2px solid #f59e0b; border-radius: 6px 0 0 6px; outline: none; font-size: 14px; }
-.search-container button { background: #f59e0b; border: 2px solid #f59e0b; color: #111; font-weight: bold; padding: 10px 20px; border-radius: 0 6px 6px 0; cursor: pointer; transition: 0.2s; }
-.search-container button:hover { background: #d97706; }
-
-.nav-bar a { color: #d1d5db; text-decoration: none; margin-left: 15px; font-weight: 500; transition: 0.3s; }
+/* Navigation Bar */
+.nav-bar { margin-right: auto; margin-left: 30px; }
+.nav-bar a { color: #ffffff; text-decoration: none; margin-right: 18px; font-size: 14px; font-weight: 500; transition: 0.3s; }
 .nav-bar a:hover { color: #f59e0b; }
 
-/* Main Site Layout with Left Sidebar */
-.site-container { display: flex; width: 95%; max-width: 1400px; margin: 30px auto; gap: 20px; }
+/* Right Tools Control */
+.header-right-tools { display: flex; align-items: center; gap: 20px; }
+.header-nav-item { display: flex; flex-direction: column; color: #ffffff; text-decoration: none; font-size: 12px; line-height: 1.2; padding: 5px; border: 1px solid transparent; border-radius: 2px; cursor: pointer; }
+.header-nav-item:hover { border-color: #ffffff; }
+.nav-line-1 { color: #ccc; font-size: 11px; }
+.nav-line-2 { font-weight: bold; font-size: 13px; }
 
-/* Left Vertical Navigation Frame */
-.side-nav { width: 230px; background: white; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb; height: fit-content; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-.side-nav h3 { font-size: 16px; margin-bottom: 15px; color: #111827; border-bottom: 2px solid #f59e0b; padding-bottom: 5px; }
-.side-nav ul { list-style: none; }
-.side-nav ul li { margin-bottom: 12px; }
-.side-nav ul li a { text-decoration: none; color: #4b5563; font-weight: 500; font-size: 14px; transition: 0.2s; display: block; }
-.side-nav ul li a:hover { color: #f59e0b; transform: translateX(5px); }
+/* Cart Item */
+.header-cart-item { display: flex; align-items: flex-end; color: #ffffff; text-decoration: none; gap: 5px; padding: 5px; border: 1px solid transparent; border-radius: 2px; }
+.header-cart-item:hover { border-color: #ffffff; }
+.cart-icon-wrap { position: relative; font-size: 24px; }
+.cart-count { position: absolute; top: -2px; left: 10px; color: #f59e0b; font-weight: bold; font-size: 14px; }
+.cart-label { font-weight: bold; font-size: 13px; margin-bottom: 2px; }
 
-/* Main Content Grid (6 Columns) */
-.content-area { flex: 1; }
-.section-title { font-size: 22px; margin-bottom: 20px; color: #1f2937; border-bottom: 3px solid #f59e0b; display: inline-block; padding-bottom: 5px; }
-.product-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+/* Search Container */
+.search-container { display: flex; align-items: center; flex: 1; max-width: 800px; margin: 0 20px; }
+.search-container input { width: 100%; padding: 12px 15px; border: none; border-radius: 6px 0 0 6px; outline: none; font-size: 15px; }
+.search-container button { background: #f59e0b; border: none; padding: 12px 20px; border-radius: 0 6px 6px 0; cursor: pointer; font-weight: bold; color: #111827; font-size: 15px; transition: 0.2s; }
+.search-container button:hover { background: #d97706; }
 
-@media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 768px) { .site-container { flex-direction: column; } .side-nav { width: 100%; } .product-grid { grid-template-columns: repeat(2, 1fr); } }
-
-/* Product Box Styling */
-.product-card { background: white; border-radius: 10px; border: 1px solid #e5e7eb; padding: 12px; text-align: center; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
-.product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-.product-card img { width: 100%; height: 130px; object-fit: contain; border-radius: 6px; margin-bottom: 10px; }
-.product-card h3 { font-size: 13px; margin-bottom: 8px; line-height: 1.3; color: #111827; height: 34px; overflow: hidden; }
-.product-card .price { font-size: 15px; font-weight: 700; color: #059669; margin-bottom: 10px; }
-.product-card .buy-btn { background: #f59e0b; color: #111; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; display: block; transition: 0.2s; }
-.product-card .buy-btn:hover { background: #d97706; color: #fff; }
-
-/* Footer & Colorful Credit */
-.main-footer { background: #111827; color: #9ca3af; padding: 40px 20px 20px; margin-top: 50px; }
-.footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-.footer-sec h3 { color: white; margin-bottom: 15px; font-size: 18px; }
-.footer-sec p { font-size: 14px; line-height: 1.6; }
-.footer-bottom { text-align: center; border-top: 1px solid #374151; margin-top: 30px; padding-top: 20px; font-size: 13px; }
-.developer-credit { margin-top: 8px; font-size: 14px; font-weight: bold; color: #d1d5db; }
-.developer-credit span { background: linear-gradient(90deg, #f59e0b, #ec4899, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 15px; }
-
-
-
-
-
-
-
-/* --- Amazon Style Header Extensions --- */
-.main-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #131921; /* ডার্ক আমাজন থিম */
-    padding: 10px 20px;
-    color: white;
-}
-
-/* নেভিগেশন মার্জিন অ্যাডজাস্টমেন্ট */
-.nav-bar {
-    margin-right: auto;
-    margin-left: 30px;
-}
-
-.nav-bar a {
-    color: #ffffff;
-    text-decoration: none;
-    margin-right: 18px;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.nav-bar a:hover {
-    color: #f59e0b;
-}
-
-/* ডানপাশের টুলস কন্ট্রোল */
-.header-right-tools {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.header-nav-item {
-    display: flex;
-    flex-direction: column;
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 12px;
-    line-height: 1.2;
-    padding: 5px;
-    border: 1px solid transparent;
-    border-radius: 2px;
-}
-
-.header-nav-item:hover {
-    border-color: #ffffff;
-}
-
-.nav-line-1 {
-    color: #ccc;
-    font-size: 11px;
-}
-
-.nav-line-2 {
-    font-weight: bold;
-    font-size: 13px;
-}
-
-/* কার্ট আইকন ডিজাইন */
-.header-cart-item {
-    display: flex;
-    align-items: flex-end;
-    color: #ffffff;
-    text-decoration: none;
-    gap: 5px;
-    padding: 5px;
-    border: 1px solid transparent;
-    border-radius: 2px;
-}
-
-.header-cart-item:hover {
-    border-color: #ffffff;
-}
-
-.cart-icon-wrap {
-    position: relative;
-    font-size: 24px;
-}
-
-.cart-count {
-    position: absolute;
-    top: -2px;
-    left: 10px;
-    color: #f59e0b;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.cart-label {
-    font-weight: bold;
-    font-size: 13px;
-    margin-bottom: 2px;
-}
-
-
-@media (max-width: 768px) {
-    .header-right-tools {
-        gap: 8px;
-    }
-    .nav-line-1 {
-        display: none; /* মোবাইলে শুধু বড় লেখাটা দেখাবে */
-    }
-}
-
-/* সার্চ বার সিএসএস (বড় ও রেসপনসিভ) */
-.search-container {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    max-width: 800px;
-    margin: 0 20px;
-}
-
-.search-container input {
-    width: 100%;
-    padding: 12px 15px;
-    border: none;
-    border-radius: 6px 0 0 6px;
-    outline: none;
-    font-size: 15px;
-}
-
-.search-container button {
-    background: #f59e0b;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 0 6px 6px 0;
-    cursor: pointer;
-    font-weight: bold;
-    color: #111827;
-    font-size: 15px;
-}
-
-.search-container button:hover {
-    background: #d97706;
-}
-
-
-
-
-
-
-/* --- Country Dropdown Menu Style --- */
+/* Country Dropdown Menu Style */
 .country-dropdown {
-   background-color: #f3f3f3;
+    background-color: #f3f3f3;
     border: none;
     border-right: 1px solid #ccc;
     border-radius: 4px 0 0 4px;
@@ -220,82 +48,91 @@ body { background-color: #f4f6f9; color: #333; }
     outline: none;
     text-overflow: ellipsis;
     white-space: nowrap;
+} /* <-- এখানে আগের কোডে ব্র্যাকেট মিসিং ছিল */
 
-/* মাউস নিলে ব্যাকগ্রাউন্ড পরিবর্তন */
-.country-dropdown:hover {
-    background-color: #e2e2e2;
+.country-dropdown:hover { background-color: #e2e2e2; }
+.country-dropdown:focus { background-color: #ffffff; }
+.country-dropdown option { background-color: #ffffff; color: #111111; padding: 8px 12px; font-size: 14px; font-weight: normal; }
+.country-dropdown option:hover, .country-dropdown option:checked { background-color: #f59e0b !important; color: #ffffff !important; }
+
+/* Main Site Layout */
+.site-container { display: flex; width: 95%; max-width: 1400px; margin: 30px auto; gap: 20px; }
+.side-nav { width: 230px; background: white; padding: 20px; border-radius: 10px; border: 1px solid #e5e7eb; height: fit-content; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+.side-nav h3 { font-size: 16px; margin-bottom: 15px; color: #111827; border-bottom: 2px solid #f59e0b; padding-bottom: 5px; }
+.side-nav ul { list-style: none; }
+.side-nav ul li { margin-bottom: 12px; }
+.side-nav ul li a { text-decoration: none; color: #4b5563; font-weight: 500; font-size: 14px; transition: 0.2s; display: block; }
+.side-nav ul li a:hover { color: #f59e0b; transform: translateX(5px); }
+
+/* Main Content Grid */
+.content-area { flex: 1; }
+.section-title { font-size: 22px; margin-bottom: 20px; color: #1f2937; border-bottom: 3px solid #f59e0b; display: inline-block; padding-bottom: 5px; }
+.product-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
+
+/* Product Box Styling */
+.product-card { background: white; border-radius: 10px; border: 1px solid #e5e7eb; padding: 12px; text-align: center; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+.product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.product-card img { width: 100%; height: 130px; object-fit: contain; border-radius: 6px; margin-bottom: 10px; }
+.product-card h3 { font-size: 13px; margin-bottom: 8px; line-height: 1.3; color: #111827; height: 34px; overflow: hidden; }
+.product-card .price { font-size: 15px; font-weight: 700; color: #059669; margin-bottom: 10px; }
+.product-card .buy-btn { background: #f59e0b; color: #111; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; display: block; transition: 0.2s; }
+.product-card .buy-btn:hover { background: #d97706; color: #fff; }
+
+/* Footer */
+.main-footer { background: #111827; color: #9ca3af; padding: 40px 20px 20px; margin-top: 50px; }
+.footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+.footer-sec h3 { color: white; margin-bottom: 15px; font-size: 18px; }
+.footer-sec p { font-size: 14px; line-height: 1.6; }
+.footer-bottom { text-align: center; border-top: 1px solid #374151; margin-top: 30px; padding-top: 20px; font-size: 13px; }
+.developer-credit { margin-top: 8px; font-size: 14px; font-weight: bold; color: #d1d5db; }
+.developer-credit span { background: linear-gradient(90deg, #f59e0b, #ec4899, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; font-size: 15px; }
+
+/* Mobile Responsive */
+@media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { 
+    .site-container { flex-direction: column; } 
+    .side-nav { width: 100%; } 
+    .product-grid { grid-template-columns: repeat(2, 1fr); } 
+    .header-right-tools { gap: 8px; }
+    .nav-line-1 { display: none; }
 }
 
-/* ফোকাস অবস্থায় ব্যাকগ্রাউন্ড ও বর্ডার */
-.country-dropdown:focus {
-    background-color: #ffffff;
-}
-
-/* অপশন লিস্ট ডিজাইন (ভিজিটরদের সহজে স্ক্রোল করে সিলেক্ট করার জন্য) */
-.country-dropdown option {
-    background-color: #ffffff;
-    color: #111111;
-    padding: 8px 12px;
-    font-size: 14px;
-    font-weight: normal;
-}
-
-/* অপশনের ওপর মাউস রাখলে কালার */
-.country-dropdown option:hover,
-.country-dropdown option:checked {
-    background-color: #f59e0b !important;
-    color: #ffffff !important;
-}
-
-
-
-
-
-
-
-
-
-
-/* Fix Footer Space & Modal Popup */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-}
-
-/* Modal Styling */
+/* AUTH MODAL STYLING (FIXED) */
 .modal-overlay {
-    display: none; /* ডিফল্টভাবে লুকানো থাকবে */
+    display: none;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
-    background: rgba(0, 0, 0, 0.7) !important;
+    background: rgba(0, 0, 0, 0.75) !important;
     z-index: 999999 !important;
-    justify-content: center;
-    align-items: center;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
-/* যখন active ক্লাস যুক্ত হবে তখন স্ক্রিনের মাঝখানে আসবে */
 .modal-overlay.active {
     display: flex !important;
 }
 
 .modal-box {
-    background: #fff !important;
+    background: #ffffff !important;
     padding: 25px !important;
     border-radius: 8px !important;
     width: 90% !important;
     max-width: 400px !important;
     position: relative !important;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3) !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4) !important;
+    color: #333 !important;
 }
 
 .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 24px;
-    cursor: pointer;
+    position: absolute !important;
+    top: 10px !important;
+    right: 15px !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    color: #333 !important;
 }
