@@ -204,42 +204,39 @@ auth.onAuthStateChanged((user) => {
 
 
 
-// ১. ইউজার অ্যাকাউন্ট তৈরি করার টেস্ট
+// ১. নতুন ইউজার রেজিস্টার করার ফাংশন
 function testSignUp() {
   const email = document.getElementById("testEmail").value;
   const password = document.getElementById("testPassword").value;
 
   auth.createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      console.log("SUCCESS: ইউজার অ্যাকাউন্ট তৈরি হয়েছে!", userCredential.user.uid);
-      alert("Account Created Successfully!");
+      alert("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! User ID: " + userCredential.user.uid);
     })
     .catch((error) => {
-      console.error("ERROR: সাইন-আপে সমস্যা:", error.message);
-      alert("Error: " + error.message);
+      alert("ত্রুটি: " + error.message);
     });
 }
 
-// ২. ডাটাবেজে ডাটা সেভ করার টেস্ট
+// ২. লগইন করা ইউজারের ডাটা সেভ করার ফাংশন
 function testSaveData() {
   const user = auth.currentUser;
 
   if (user) {
-    // ২ নম্বর সিকিউরিটি রুল অনুযায়ী ইউজার লগইন থাকলেই ডাটা সেভ হবে
+    // ইউজারের নিজস্ব আইডির অধীনে ডাটা সেভ হবে (নতুন সিকিউরিটি রুলস অনুযায়ী)
     db.collection("users").doc(user.uid).set({
-      storeName: "RBMN Store Test Data",
-      cartItems: ["Item 1", "Item 2"],
-      lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+      storeName: "RBMN Store",
+      cart: ["Product A", "Product B"],
+      userEmail: user.email,
+      lastLogin: firebase.firestore.FieldValue.serverTimestamp()
     })
     .then(() => {
-      console.log("SUCCESS: ফায়ারবেসে ডাটা সফলভাবে সেভ হয়েছে!");
-      alert("Data Saved to Firestore!");
+      alert("অভিনন্দন! ডাটা ফায়ারবেসে সফলভাবে সেভ হয়েছে।");
     })
     .catch((error) => {
-      console.error("ERROR: ডাটা সেভ হতে সমস্যা:", error.message);
-      alert("Firestore Error: " + error.message);
+      alert("ডাটা সেভ হতে সমস্যা: " + error.message);
     });
   } else {
-    alert("আগে ১ নম্বর বাটনে চাপ দিয়ে অ্যাকাউন্ট তৈরি/লগইন করে নিন!");
+    alert("আগে ১ নম্বর বাটনে চাপ দিয়ে একাউন্ট তৈরি বা লগইন করুন!");
   }
 }
