@@ -165,3 +165,34 @@ function registerUser(email, password, userName) {
 }
 
 
+
+
+
+
+
+// ইউজার সাইন-ইন ফাংশন
+function loginUser(email, password) {
+  auth.signInWithEmailAndPassword(email, password)
+    .catch((error) => {
+      console.error("লগইন ব্যর্থ:", error.message);
+    });
+}
+
+// যেকোনো ডিভাইস থেকে লগইন করলেই ডাটা লোড হওয়ার লিসেনার
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    console.log("লগইন করা ইউজার ID:", user.uid);
+    
+    // ডাটাবেজ থেকে রিয়েল-টাইম ডাটা রিড করা
+    db.collection("users").doc(user.uid)
+      .onSnapshot((doc) => {
+        if (doc.exists) {
+          const userData = doc.data();
+          console.log("ইউজার ডাটা:", userData);
+          // এখানে UI আপডেট করার ফাংশন কল করুন
+        }
+      });
+  } else {
+    console.log("কোনো ইউজার লগইন নেই");
+  }
+});
