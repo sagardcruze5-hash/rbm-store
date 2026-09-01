@@ -196,3 +196,50 @@ auth.onAuthStateChanged((user) => {
     console.log("কোনো ইউজার লগইন নেই");
   }
 });
+
+
+
+
+
+
+
+
+// ১. ইউজার অ্যাকাউন্ট তৈরি করার টেস্ট
+function testSignUp() {
+  const email = document.getElementById("testEmail").value;
+  const password = document.getElementById("testPassword").value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      console.log("SUCCESS: ইউজার অ্যাকাউন্ট তৈরি হয়েছে!", userCredential.user.uid);
+      alert("Account Created Successfully!");
+    })
+    .catch((error) => {
+      console.error("ERROR: সাইন-আপে সমস্যা:", error.message);
+      alert("Error: " + error.message);
+    });
+}
+
+// ২. ডাটাবেজে ডাটা সেভ করার টেস্ট
+function testSaveData() {
+  const user = auth.currentUser;
+
+  if (user) {
+    // ২ নম্বর সিকিউরিটি রুল অনুযায়ী ইউজার লগইন থাকলেই ডাটা সেভ হবে
+    db.collection("users").doc(user.uid).set({
+      storeName: "RBMN Store Test Data",
+      cartItems: ["Item 1", "Item 2"],
+      lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(() => {
+      console.log("SUCCESS: ফায়ারবেসে ডাটা সফলভাবে সেভ হয়েছে!");
+      alert("Data Saved to Firestore!");
+    })
+    .catch((error) => {
+      console.error("ERROR: ডাটা সেভ হতে সমস্যা:", error.message);
+      alert("Firestore Error: " + error.message);
+    });
+  } else {
+    alert("আগে ১ নম্বর বাটনে চাপ দিয়ে অ্যাকাউন্ট তৈরি/লগইন করে নিন!");
+  }
+}
