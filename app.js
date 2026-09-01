@@ -139,3 +139,29 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 
+
+
+
+
+function registerUser(email, password, userName) {
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const user = userCredential.user;
+      
+      // Firestore ডাটাবেজে ইউজার প্রোফাইল সেভ
+      return db.collection("users").doc(user.uid).set({
+        name: userName,
+        email: email,
+        cart: [],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    })
+    .then(() => {
+      console.log("ইউজার সফলভাবে রেজিস্টার্ড এবং ডাটা সেভ হয়েছে!");
+    })
+    .catch((error) => {
+      console.error("ত্রুটি:", error.message);
+    });
+}
+
+
