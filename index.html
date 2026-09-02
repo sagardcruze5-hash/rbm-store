@@ -29,7 +29,7 @@
             <option value="IN">India 🇮🇳</option>
         </select>
 
-        <!-- ৩. সার্চ বার -->
+        <!-- ৩. বড় ও রেসপন্সিভ সার্চ বার -->
         <div class="search-container">
             <input type="text" id="search-input" placeholder="Search products on RBM Store...">
             <button id="search-btn">Search</button>
@@ -39,7 +39,7 @@
         <div class="header-right-tools">
             <a href="javascript:void(0)" class="header-nav-item" id="auth-trigger-btn" onclick="openAuthModal()">
                 <span class="nav-line-1" id="user-display-name">Hello, sign in</span>
-                <span class="nav-line-2">Account & Lists ▾</span>
+                <span class="nav-line-2" id="user-sub-status">Account & Lists ▾</span>
             </a>
             <a href="#" class="header-nav-item">
                 <span class="nav-line-1">Returns</span>
@@ -61,15 +61,18 @@
         <aside class="side-nav">
             <h3>Categories</h3>
             <ul id="sidebar-menu">
-                <li><a href="#">BRAKING ITEM</a></li>
-                <li><a href="#">GUDET</a></li>
+                <li><a href="javascript:void(0)" onclick="filterCategory('ALL')">ALL PRODUCTS</a></li>
+                <li><a href="javascript:void(0)" onclick="filterCategory('BRAKING ITEM')">BRAKING ITEM</a></li>
+                <li><a href="javascript:void(0)" onclick="filterCategory('GUDET')">GUDET</a></li>
             </ul>
         </aside>
 
         <!-- Main Product Section -->
         <main class="content-area">
             <h2 class="section-title">Featured Products</h2>
-            <div id="product-list" class="product-grid"></div>
+            <div id="product-list" class="product-grid">
+                <p class="loading-text">Loading products...</p>
+            </div>
         </main>
     </div>
 
@@ -147,7 +150,7 @@
         </div>
     </div>
 
-    <!-- Modal Handler Script -->
+    <!-- Modal Handler Helper JS -->
     <script>
         function openAuthModal() {
             var modal = document.getElementById('auth-modal');
@@ -193,7 +196,7 @@
         };
     </script>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs (Compat SDKs for smooth browser support) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
