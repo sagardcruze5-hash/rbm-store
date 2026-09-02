@@ -44,6 +44,8 @@ function listenToUserCart(userId) {
     if (typeof firebase !== 'undefined' && firebase.firestore) {
         firebase.firestore().collection('users').doc(userId).collection('cart').onSnapshot(snapshot => {
             updateCartBadgeCount(snapshot.size);
+        }, err => {
+            console.log("Cart listener notice:", err.message);
         });
     }
 }
@@ -61,9 +63,9 @@ function addToCart(id, title, price, image) {
     const user = auth.currentUser;
     firebase.firestore().collection('users').doc(user.uid).collection('cart').doc(id).set({
         productId: id,
-        title: title,
-        price: price,
-        image: image,
+        title: title || 'Product',
+        price: price || 0,
+        image: image || '',
         addedAt: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
         alert('কার্টে প্রোডাক্ট সেভ হয়েছে!');
@@ -83,30 +85,49 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!productsToRender || productsToRender.length === 0) {
             productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 20px;">কোনো প্রোডাক্ট পাওয়া যায়নি!</p>';
         } else {
-            productList.innerHTML = productsToRender.map(product => `
-                <div class="product-card">
-                    <img src="${product.image || product.img || 'https://via.placeholder.com/150'}" alt="${product.title || product.name || 'Product'}" onerror="this.src='https://via.placeholder.com/150'">
-                    <h3>${product.title || product.name || 'Untitled Product'}</h3>
-                    <p class="price">৳${product.price || 0}</p>
-                    <button class="buy-btn" onclick="addToCart('${product.id}', '${(product.title || product.name || '').replace(/'/g, "\\'")}', '${product.price}', '${product.image || product.img}')">Add to Cart</button>
-                </div>
-            `).join('');
+            productList.innerHTML = productsToRender.map(product => {
+                const safeTitle = (product.title || product.name || 'Untitled Product').replace(/'/g, "\\'");
+                const safeImage = product.image || product.img || 'https://via.placeholder.com/150';
+                const safePrice = product.price || 0;
+
+                return `
+                    <div class="product-card">
+                        <img src="${safeImage}" alt="${safeTitle}" onerror="this.src='https://via.placeholder.com/150'">
+                        <h3>${safeTitle}</h3>
+                        <p class="price">৳${safePrice}</p>
+                        <button class="buy-btn" onclick="addToCart('${product.id}', '${safeTitle}', '${safePrice}', '${safeImage}')">Add to Cart</button>
+                    </div>
+                `;
+            }).join('');
         }
     }
 
-    // ফায়ারবেস থেকে সব ডিভাইসের জন্য প্রোডাক্ট লোড
+    // ফায়ারবেস থেকে সব ডিভাইসের জন্য প্রোডাক্ট লোড (Safe Fallback সহ)
     function loadProductsFromCloud() {
         if (typeof firebase !== 'undefined' && firebase.firestore) {
             const db = firebase.firestore();
-            db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+            
+            // প্রথমে সাধারণ গেট ক্যোয়ারি দিয়ে ট্রাই করবে যাতে orderBy এরর না দেয়
+            db.collection("products").onSnapshot((snapshot) => {
                 let products = [];
                 snapshot.forEach((doc) => {
                     products.push({ id: doc.id, ...doc.data() });
                 });
+
+                // জাভাস্ক্রিপ্ট দিয়েই সাজিয়ে নেওয়া (createdAt থাকলে অনুযায়ী, না থাকলে স্বাভাবিক)
+                products.sort((a, b) => {
+                    const timeA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+                    const timeB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+                    return timeB - timeA;
+                });
+
                 currentLoadedProducts = products;
                 displayProducts(products);
             }, (error) => {
                 console.error("Firestore Error:", error);
+                if (productList) {
+                    productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 20px; color: red;">প্রোডাক্ট লোড করতে সমস্যা হচ্ছে। ফায়ারবেস সিকিউরিটি রুলস চেক করুন।</p>';
+                }
             });
         } else {
             setTimeout(loadProductsFromCloud, 300);
