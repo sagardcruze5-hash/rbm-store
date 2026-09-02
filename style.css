@@ -26,10 +26,30 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
     border: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Navigation Bar - Increased Font Size & Black Text */
-.nav-bar { margin-right: auto; margin-left: 30px; }
-.nav-bar a { color: #000000; text-decoration: none; margin-right: 20px; font-size: 16px; font-weight: 700; transition: 0.3s; }
-.nav-bar a:hover { color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+/* Navigation Bar - 3D Text Effect on Hover */
+.nav-bar { margin-right: auto; margin-left: 30px; display: flex; align-items: center; }
+.nav-bar a { 
+    color: #000000; 
+    text-decoration: none; 
+    margin-right: 20px; 
+    font-size: 16px; 
+    font-weight: 700; 
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    display: inline-block;
+    position: relative;
+    padding: 4px 6px;
+}
+
+/* 3D Hover Effect */
+.nav-bar a:hover { 
+    color: #ffffff; 
+    transform: translateY(-4px) scale(1.15);
+    text-shadow: 
+        1px 1px 0px #111827,
+        2px 2px 0px #111827,
+        3px 3px 0px #111827,
+        4px 4px 6px rgba(0, 0, 0, 0.4);
+}
 
 /* Right Tools Control - Increased Font Size & Black Text */
 .header-right-tools { display: flex; align-items: center; gap: 20px; }
