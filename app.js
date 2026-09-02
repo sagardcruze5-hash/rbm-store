@@ -1,250 +1,186 @@
-// ১. ফায়ারবেস কনফিগারেশন
+// Firebase Config
 const firebaseConfig = {
-    apiKey: "AIzaSyA7itgqaCU1EZAgfO-SccODzDEBvSP5nEE",
-    authDomain: "rbm-store-458c8.firebaseapp.com",
-    projectId: "rbm-store-458c8",
-    storageBucket: "rbm-store-458c8.firebasestorage.app",
-    messagingSenderId: "415572875433",
-    appId: "1:415572875433:web:e2b856af421b636bb271b8",
-    measurementId: "G-GDR5R78Y6D"
+  apiKey: "AIzaSyA7itgqaCU1EZAgfO-SccODzDEBvSP5nEE",
+  authDomain: "rbm-store-458c8.firebaseapp.com",
+  projectId: "rbm-store-458c8",
+  storageBucket: "rbm-store-458c8.firebasestorage.app",
+  messagingSenderId: "415572875433",
+  appId: "1:415572875433:web:e2b856af421b636bb271b8"
 };
 
-// ২. Firebase ইনিশিয়ালাইজেশন
+// Initialize Firebase
 if (typeof firebase !== 'undefined' && !firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
 
-let currentLoadedProducts = [];
+const db = firebase.firestore();
+const auth = firebase.auth();
 
-// --- মডাল ও গ্লোবাল ফাংশনসমূহ (HTML onclick থেকে সরাসরি কল করার জন্য) ---
+let globalProducts = [];
+
+// Auth Modal Functions
 function openAuthModal() {
-    const authModal = document.getElementById('auth-modal');
-    if (authModal) {
-        authModal.style.display = 'flex';
-        authModal.classList.add('active');
-    }
+    document.getElementById('auth-modal').classList.add('active');
 }
 
 function closeAuthModal() {
-    const authModal = document.getElementById('auth-modal');
-    if (authModal) {
-        authModal.style.display = 'none';
-        authModal.classList.remove('active');
+    document.getElementById('auth-modal').classList.remove('active');
+}
+
+function switchAuthTab(type) {
+    const loginForm = document.getElementById('login-form');
+    const regForm = document.getElementById('register-form');
+    const loginTab = document.getElementById('login-tab-btn');
+    const regTab = document.getElementById('register-tab-btn');
+
+    if (type === 'login') {
+        loginForm.style.display = 'flex';
+        regForm.style.display = 'none';
+        loginTab.classList.add('active');
+        regTab.classList.remove('active');
+    } else {
+        loginForm.style.display = 'none';
+        regForm.style.display = 'flex';
+        regTab.classList.add('active');
+        loginTab.classList.remove('active');
     }
 }
 
-function updateCartBadgeCount(count) {
-    const cartCountEl = document.querySelector('.cart-count') || document.getElementById('cart-count');
-    if (cartCountEl) {
-        cartCountEl.textContent = count;
+// Render Products
+function renderProducts(products) {
+    const productList = document.getElementById('product-list');
+    if (!productList) return;
+
+    if (!products || products.length === 0) {
+        productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 20px;">No products found in store!</p>';
+        return;
     }
+
+    productList.innerHTML = products.map(product => `
+        <div class="product-card">
+            <img src="${product.image || 'https://via.placeholder.com/150'}" alt="${product.title || 'Product'}" onerror="this.src='https://via.placeholder.com/150'">
+            <h3>${product.title || product.name || 'Untitled Product'}</h3>
+            <p class="price">৳ ${product.price || 0}</p>
+            <button class="buy-btn" onclick="addToCart('${product.id}', '${(product.title || '').replace(/'/g, "\\'")}', '${product.price}', '${product.image}')">Add to Cart</button>
+        </div>
+    `).join('');
 }
 
-function listenToUserCart(userId) {
-    if (typeof firebase !== 'undefined' && firebase.firestore) {
-        firebase.firestore().collection('users').doc(userId).collection('cart').onSnapshot(snapshot => {
-            updateCartBadgeCount(snapshot.size);
-        }, err => {
-            console.log("Cart listener notice:", err.message);
+// Fetch Products from Firestore
+function loadProducts() {
+    db.collection("products").onSnapshot((snapshot) => {
+        let products = [];
+        snapshot.forEach((doc) => {
+            products.push({ id: doc.id, ...doc.data() });
         });
-    }
+        globalProducts = products;
+        renderProducts(products);
+    }, (error) => {
+        console.error("Firestore Error:", error);
+    });
 }
 
+// Add to Cart Function
 function addToCart(id, title, price, image) {
-    if (typeof firebase === 'undefined' || !firebase.auth) return;
-    const auth = firebase.auth();
-    
-    if (!auth.currentUser) {
-        alert("প্রোডাক্ট কার্টে যোগ করার জন্য আগে লগইন করুন!");
+    const user = auth.currentUser;
+    if (!user) {
+        alert("Please login first to add products to cart!");
         openAuthModal();
         return;
     }
 
-    const user = auth.currentUser;
-    firebase.firestore().collection('users').doc(user.uid).collection('cart').doc(id).set({
+    db.collection('users').doc(user.uid).collection('cart').doc(id).set({
         productId: id,
-        title: title || 'Product',
-        price: price || 0,
-        image: image || '',
+        title: title,
+        price: price,
+        image: image,
         addedAt: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
-        alert('কার্টে প্রোডাক্ট সেভ হয়েছে!');
-    }).catch(err => {
-        alert('Error: ' + err.message);
+        alert('Added to cart successfully!');
+    }).catch(err => alert(err.message));
+}
+
+// Real-time Cart Listener
+function listenToCart(userId) {
+    db.collection('users').doc(userId).collection('cart').onSnapshot(snapshot => {
+        const cartCount = document.getElementById('cart-count');
+        if (cartCount) cartCount.textContent = snapshot.size;
     });
 }
 
-// ৩. DOM Content Loaded
+// DOM Events
 document.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
 
-    const productList = document.getElementById('product-list') || document.querySelector('.product-grid');
-
-    // প্রোডাক্ট গ্রিড রেন্ডার
-    function displayProducts(productsToRender) {
-        if (!productList) return;
-        if (!productsToRender || productsToRender.length === 0) {
-            productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 20px;">কোনো প্রোডাক্ট পাওয়া যায়নি!</p>';
-        } else {
-            productList.innerHTML = productsToRender.map(product => {
-                const safeTitle = (product.title || product.name || 'Untitled Product').replace(/'/g, "\\'");
-                const safeImage = product.image || product.img || 'https://via.placeholder.com/150';
-                const safePrice = product.price || 0;
-
-                return `
-                    <div class="product-card">
-                        <img src="${safeImage}" alt="${safeTitle}" onerror="this.src='https://via.placeholder.com/150'">
-                        <h3>${safeTitle}</h3>
-                        <p class="price">৳${safePrice}</p>
-                        <button class="buy-btn" onclick="addToCart('${product.id}', '${safeTitle}', '${safePrice}', '${safeImage}')">Add to Cart</button>
-                    </div>
-                `;
-            }).join('');
-        }
-    }
-
-    // ফায়ারবেস থেকে সব ডিভাইসের জন্য প্রোডাক্ট লোড (Safe Fallback সহ)
-    function loadProductsFromCloud() {
-        if (typeof firebase !== 'undefined' && firebase.firestore) {
-            const db = firebase.firestore();
-            
-            // প্রথমে সাধারণ গেট ক্যোয়ারি দিয়ে ট্রাই করবে যাতে orderBy এরর না দেয়
-            db.collection("products").onSnapshot((snapshot) => {
-                let products = [];
-                snapshot.forEach((doc) => {
-                    products.push({ id: doc.id, ...doc.data() });
-                });
-
-                // জাভাস্ক্রিপ্ট দিয়েই সাজিয়ে নেওয়া (createdAt থাকলে অনুযায়ী, না থাকলে স্বাভাবিক)
-                products.sort((a, b) => {
-                    const timeA = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
-                    const timeB = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
-                    return timeB - timeA;
-                });
-
-                currentLoadedProducts = products;
-                displayProducts(products);
-            }, (error) => {
-                console.error("Firestore Error:", error);
-                if (productList) {
-                    productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 20px; color: red;">প্রোডাক্ট লোড করতে সমস্যা হচ্ছে। ফায়ারবেস সিকিউরিটি রুলস চেক করুন।</p>';
-                }
-            });
-        } else {
-            setTimeout(loadProductsFromCloud, 300);
-        }
-    }
-
-    loadProductsFromCloud();
-
-    // সার্চ ফিল্টার
+    // Search Logic
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
 
-    function filterProducts() {
-        if (!searchInput) return;
+    function executeSearch() {
         const query = searchInput.value.toLowerCase().trim();
-        const filtered = currentLoadedProducts.filter(p => 
-            (p.title && p.title.toLowerCase().includes(query)) || 
+        const filtered = globalProducts.filter(p => 
+            (p.title && p.title.toLowerCase().includes(query)) ||
             (p.name && p.name.toLowerCase().includes(query))
         );
-        displayProducts(filtered);
+        renderProducts(filtered);
     }
 
-    if (searchInput) searchInput.addEventListener('keyup', filterProducts);
-    if (searchBtn) searchBtn.addEventListener('click', filterProducts);
+    if (searchInput) searchInput.addEventListener('keyup', executeSearch);
+    if (searchBtn) searchBtn.addEventListener('click', executeSearch);
 
-    // --- প্রোডাক্ট আপলোড ফর্ম ---
-    const pForm = document.getElementById('admin-product-form');
-    if (pForm) {
-        pForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const title = document.getElementById('p-title').value;
-            const price = document.getElementById('p-price').value;
-            const image = document.getElementById('p-image').value;
-            const link = document.getElementById('p-link') ? document.getElementById('p-link').value : '';
-
-            if (typeof firebase !== 'undefined' && firebase.firestore) {
-                const db = firebase.firestore();
-                db.collection("products").add({
-                    title: title,
-                    price: price,
-                    image: image,
-                    link: link,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => {
-                    alert('SUCCESS: প্রোডাক্টটি সফলভাবে ক্লাউডে আপলোড হয়েছে!');
-                    pForm.reset();
-                }).catch(err => {
-                    alert("Upload Error: " + err.message);
-                });
-            } else {
-                alert("Firebase এখনো লোড হয়নি! পেজটি রিফ্রেশ দিয়ে আবার চেষ্টা করুন।");
-            }
-        });
-    }
-
-    // --- AUTHENTICATION ---
-    const loginForm = document.getElementById('login-form');
+    // Register Event
     const registerForm = document.getElementById('register-form');
-
-    if (registerForm && typeof firebase !== 'undefined' && firebase.auth) {
+    if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
 
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    return firebase.firestore().collection('users').doc(user.uid).set({
-                        name: name,
-                        email: email,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((cred) => {
+                    return db.collection('users').doc(cred.user.uid).set({ name, email });
                 })
                 .then(() => {
-                    alert('Account created successfully!');
+                    alert('Registration Successful!');
                     closeAuthModal();
                 })
-                .catch((error) => alert('Registration Error: ' + error.message));
+                .catch(err => alert(err.message));
         });
     }
 
-    if (loginForm && typeof firebase !== 'undefined' && firebase.auth) {
+    // Login Event
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            firebase.auth().signInWithEmailAndPassword(email, password)
+            auth.signInWithEmailAndPassword(email, password)
                 .then(() => {
-                    alert('Logged in successfully!');
+                    alert('Login Successful!');
                     closeAuthModal();
                 })
-                .catch((error) => alert('Login Error: ' + error.message));
+                .catch(err => alert(err.message));
         });
     }
 
-    // ইউজারের Auth স্টেট লিসেনার
-    if (typeof firebase !== 'undefined' && firebase.auth) {
-        firebase.auth().onAuthStateChanged((user) => {
-            const userText = document.getElementById('user-display-name');
-            if (user) {
-                if (firebase.firestore) {
-                    firebase.firestore().collection('users').doc(user.uid).get().then((doc) => {
-                        if (doc.exists && doc.data().name) {
-                            if (userText) userText.innerText = `Hello, ${doc.data().name}`;
-                        } else {
-                            if (userText) userText.innerText = `Hello, ${user.email.split('@')[0]}`;
-                        }
-                    });
+    // Auth State Observer
+    auth.onAuthStateChanged((user) => {
+        const userText = document.getElementById('user-display-name');
+        if (user) {
+            db.collection('users').doc(user.uid).get().then(doc => {
+                if (doc.exists && doc.data().name) {
+                    if (userText) userText.innerText = `Hello, ${doc.data().name}`;
+                } else {
+                    if (userText) userText.innerText = `Hello, ${user.email.split('@')[0]}`;
                 }
-                listenToUserCart(user.uid);
-            } else {
-                if (userText) userText.innerText = 'Hello, sign in';
-                updateCartBadgeCount(0);
-            }
-        });
-    }
+            });
+            listenToCart(user.uid);
+        } else {
+            if (userText) userText.innerText = 'Hello, Sign in';
+            document.getElementById('cart-count').textContent = '0';
+        }
+    });
 });
