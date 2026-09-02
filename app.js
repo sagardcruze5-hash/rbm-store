@@ -14,29 +14,14 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
-// Global Open/Close Modal Functions
-function openAuthModal() {
-    const authModal = document.getElementById('auth-modal');
-    if (authModal) {
-        authModal.style.display = 'flex';
-        authModal.classList.add('active');
-    }
-}
-
-function closeAuthModal() {
-    const authModal = document.getElementById('auth-modal');
-    if (authModal) {
-        authModal.style.display = 'none';
-        authModal.classList.remove('active');
-    }
-}
-
 let currentLoadedProducts = [];
 
+// ৩. DOM Content Loaded
 document.addEventListener('DOMContentLoaded', () => {
 
     const productList = document.getElementById('product-list') || document.querySelector('.product-grid');
 
+    // প্রোডাক্ট গ্রিড রেন্ডার
     function displayProducts(productsToRender) {
         if (!productList) return;
         if (!productsToRender || productsToRender.length === 0) {
@@ -53,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ফায়ারবেস থেকে লাইভ ডাটা লোড
-    function fetchCloudProducts() {
+    // ফায়ারবেস থেকে সব ডিভাইসের জন্য প্রোডাক্ট লোড
+    function loadProductsFromCloud() {
         if (typeof firebase !== 'undefined' && firebase.firestore) {
             const db = firebase.firestore();
             db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
@@ -65,16 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentLoadedProducts = products;
                 displayProducts(products);
             }, (error) => {
-                console.error("Firebase Read Error:", error);
+                console.error("Firestore Error:", error);
             });
         } else {
-            setTimeout(fetchCloudProducts, 500);
+            setTimeout(loadProductsFromCloud, 500);
         }
     }
 
-    fetchCloudProducts();
+    loadProductsFromCloud();
 
-    // Search Feature
+    // সার্চ ফিল্টার
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
 
@@ -92,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchBtn) searchBtn.addEventListener('click', filterProducts);
 
 
-    // --- ADMIN PANEL PRODUCT UPLOAD (DIRECT CLOUD SAVE) ---
+    // --- প্রোডাক্ট আপলোড ফর্ম (সরাসরি ফায়ারবেস ক্লাউডে সেভ হবে) ---
     const pForm = document.getElementById('admin-product-form');
     if (pForm) {
         pForm.addEventListener('submit', (e) => {
@@ -111,13 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     link: link,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 }).then(() => {
-                    alert('সফলভাবে ক্লাউড ডাটাবেজে প্রোডাক্ট আপলোড হয়েছে! সব ডিভাইসে এখন দেখাবে।');
+                    alert('SUCCESS: প্রোডাক্টটি সফলভাবে ক্লাউডে আপলোড হয়েছে! সব ডিভাইসে এখন দেখাবে।');
                     pForm.reset();
                 }).catch(err => {
-                    alert("Firebase Error: " + err.message + "\n\nদয়া করে Firebase Rules চেক করুন!");
+                    alert("Upload Error: " + err.message);
                 });
             } else {
-                alert("Firebase এখনো লোড হয়নি, কিছুক্ষণ পর আবার চেষ্টা করুন।");
+                alert("Firebase এখনো লোড হয়নি! পেজটি রিফ্রেশ দিয়ে আবার চেষ্টা করুন।");
             }
         });
     }
@@ -166,7 +151,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ইউজারের লগইন স্ট্যাটাস চেক
+// মডাল হ্যান্ডলার
+function openAuthModal() {
+    const authModal = document.getElementById('auth-modal');
+    if (authModal) {
+        authModal.style.display = 'flex';
+        authModal.classList.add('active');
+    }
+}
+
+function closeAuthModal() {
+    const authModal = document.getElementById('auth-modal');
+    if (authModal) {
+        authModal.style.display = 'none';
+        authModal.classList.remove('active');
+    }
+}
+
+// ইউজারের স্টেট চেক
 if (typeof firebase !== 'undefined' && firebase.auth) {
     firebase.auth().onAuthStateChanged((user) => {
         const userText = document.getElementById('user-display-name');
@@ -188,7 +190,7 @@ if (typeof firebase !== 'undefined' && firebase.auth) {
     });
 }
 
-// অ্যাকাউন্ট ভিত্তিক কার্ট
+// কার্ট ফিচার
 function addToCart(id, title, price, image) {
     if (typeof firebase === 'undefined' || !firebase.auth) return;
     const auth = firebase.auth();
