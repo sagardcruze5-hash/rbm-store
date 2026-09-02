@@ -9,12 +9,68 @@ const firebaseConfig = {
   measurementId: "G-GDR5R78Y6D"
 };
 
-// ২. Firebase ইনিশিয়ালাইজেশন
+// ২. Firebase ইনিশিয়ালাইজেশন
 if (typeof firebase !== 'undefined' && !firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 }
 
 let currentLoadedProducts = [];
+
+// --- মডাল ও গ্লোবাল ফাংশনসমূহ (HTML onclick থেকে সরাসরি কল করার জন্য) ---
+function openAuthModal() {
+    const authModal = document.getElementById('auth-modal');
+    if (authModal) {
+        authModal.style.display = 'flex';
+        authModal.classList.add('active');
+    }
+}
+
+function closeAuthModal() {
+    const authModal = document.getElementById('auth-modal');
+    if (authModal) {
+        authModal.style.display = 'none';
+        authModal.classList.remove('active');
+    }
+}
+
+function updateCartBadgeCount(count) {
+    const cartCountEl = document.querySelector('.cart-count') || document.getElementById('cart-count');
+    if (cartCountEl) {
+        cartCountEl.textContent = count;
+    }
+}
+
+function listenToUserCart(userId) {
+    if (typeof firebase !== 'undefined' && firebase.firestore) {
+        firebase.firestore().collection('users').doc(userId).collection('cart').onSnapshot(snapshot => {
+            updateCartBadgeCount(snapshot.size);
+        });
+    }
+}
+
+function addToCart(id, title, price, image) {
+    if (typeof firebase === 'undefined' || !firebase.auth) return;
+    const auth = firebase.auth();
+    
+    if (!auth.currentUser) {
+        alert("প্রোডাক্ট কার্টে যোগ করার জন্য আগে লগইন করুন!");
+        openAuthModal();
+        return;
+    }
+
+    const user = auth.currentUser;
+    firebase.firestore().collection('users').doc(user.uid).collection('cart').doc(id).set({
+        productId: id,
+        title: title,
+        price: price,
+        image: image,
+        addedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        alert('কার্টে প্রোডাক্ট সেভ হয়েছে!');
+    }).catch(err => {
+        alert('Error: ' + err.message);
+    });
+}
 
 // ৩. DOM Content Loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,14 +81,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayProducts(productsToRender) {
         if (!productList) return;
         if (!productsToRender || productsToRender.length === 0) {
-            productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 20px;">কোনো প্রোডাক্ট পাওয়া যায়নি!</p>';
+            productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center; padding: 20px;">কোনো প্রোডাক্ট পাওয়া যায়নি!</p>';
         } else {
             productList.innerHTML = productsToRender.map(product => `
                 <div class="product-card">
-                    <img src="${product.image || product.img}" alt="${product.title || product.name}" onerror="this.src='https://via.placeholder.com/150'">
-                    <h3>${product.title || product.name}</h3>
-                    <p class="price">৳${product.price}</p>
-                    <button class="buy-btn" onclick="addToCart('${product.id}', '${product.title || product.name}', '${product.price}', '${product.image || product.img}')">Add to Cart</button>
+                    <img src="${product.image || product.img || 'https://via.placeholder.com/150'}" alt="${product.title || product.name || 'Product'}" onerror="this.src='https://via.placeholder.com/150'">
+                    <h3>${product.title || product.name || 'Untitled Product'}</h3>
+                    <p class="price">৳${product.price || 0}</p>
+                    <button class="buy-btn" onclick="addToCart('${product.id}', '${(product.title || product.name || '').replace(/'/g, "\\'")}', '${product.price}', '${product.image || product.img}')">Add to Cart</button>
                 </div>
             `).join('');
         }
@@ -53,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Firestore Error:", error);
             });
         } else {
-            setTimeout(loadProductsFromCloud, 500);
+            setTimeout(loadProductsFromCloud, 300);
         }
     }
 
@@ -65,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function filterProducts() {
         if (!searchInput) return;
-        const query = searchInput.value.toLowerCase();
+        const query = searchInput.value.toLowerCase().trim();
         const filtered = currentLoadedProducts.filter(p => 
             (p.title && p.title.toLowerCase().includes(query)) || 
             (p.name && p.name.toLowerCase().includes(query))
@@ -76,8 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchInput) searchInput.addEventListener('keyup', filterProducts);
     if (searchBtn) searchBtn.addEventListener('click', filterProducts);
 
-
-    // --- প্রোডাক্ট আপলোড ফর্ম (সরাসরি ফায়ারবেস ক্লাউডে সেভ হবে) ---
+    // --- প্রোডাক্ট আপলোড ফর্ম ---
     const pForm = document.getElementById('admin-product-form');
     if (pForm) {
         pForm.addEventListener('submit', (e) => {
@@ -96,13 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     link: link,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 }).then(() => {
-                    alert('SUCCESS: প্রোডাক্টটি সফলভাবে ক্লাউডে আপলোড হয়েছে! সব ডিভাইসে এখন দেখাবে।');
+                    alert('SUCCESS: প্রোডাক্টটি সফলভাবে ক্লাউডে আপলোড হয়েছে!');
                     pForm.reset();
                 }).catch(err => {
                     alert("Upload Error: " + err.message);
                 });
             } else {
-                alert("Firebase এখনো লোড হয়নি! পেজটি রিফ্রেশ দিয়ে আবার চেষ্টা করুন।");
+                alert("Firebase এখনো লোড হয়নি! পেজটি রিফ্রেশ দিয়ে আবার চেষ্টা করুন।");
             }
         });
     }
@@ -149,81 +204,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch((error) => alert('Login Error: ' + error.message));
         });
     }
-});
 
-// মডাল হ্যান্ডলার
-function openAuthModal() {
-    const authModal = document.getElementById('auth-modal');
-    if (authModal) {
-        authModal.style.display = 'flex';
-        authModal.classList.add('active');
-    }
-}
-
-function closeAuthModal() {
-    const authModal = document.getElementById('auth-modal');
-    if (authModal) {
-        authModal.style.display = 'none';
-        authModal.classList.remove('active');
-    }
-}
-
-// ইউজারের স্টেট চেক
-if (typeof firebase !== 'undefined' && firebase.auth) {
-    firebase.auth().onAuthStateChanged((user) => {
-        const userText = document.getElementById('user-display-name');
-        if (user) {
-            if (firebase.firestore) {
-                firebase.firestore().collection('users').doc(user.uid).get().then((doc) => {
-                    if (doc.exists && doc.data().name) {
-                        if (userText) userText.innerText = `Hello, ${doc.data().name}`;
-                    } else {
-                        if (userText) userText.innerText = `Hello, ${user.email.split('@')[0]}`;
-                    }
-                });
+    // ইউজারের Auth স্টেট লিসেনার
+    if (typeof firebase !== 'undefined' && firebase.auth) {
+        firebase.auth().onAuthStateChanged((user) => {
+            const userText = document.getElementById('user-display-name');
+            if (user) {
+                if (firebase.firestore) {
+                    firebase.firestore().collection('users').doc(user.uid).get().then((doc) => {
+                        if (doc.exists && doc.data().name) {
+                            if (userText) userText.innerText = `Hello, ${doc.data().name}`;
+                        } else {
+                            if (userText) userText.innerText = `Hello, ${user.email.split('@')[0]}`;
+                        }
+                    });
+                }
+                listenToUserCart(user.uid);
+            } else {
+                if (userText) userText.innerText = 'Hello, sign in';
+                updateCartBadgeCount(0);
             }
-            listenToUserCart(user.uid);
-        } else {
-            if (userText) userText.innerText = 'Hello, sign in';
-            updateCartBadgeCount(0);
-        }
-    });
-}
-
-// কার্ট ফিচার
-function addToCart(id, title, price, image) {
-    if (typeof firebase === 'undefined' || !firebase.auth) return;
-    const auth = firebase.auth();
-    
-    if (!auth.currentUser) {
-        alert("প্রোডাক্ট কার্টে যোগ করার জন্য আগে লগইন করুন!");
-        openAuthModal();
-        return;
-    }
-
-    const user = auth.currentUser;
-    firebase.firestore().collection('users').doc(user.uid).collection('cart').doc(id).set({
-        productId: id,
-        title: title,
-        price: price,
-        image: image,
-        addedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-        alert('কার্টে প্রোডাক্ট সেভ হয়েছে!');
-    });
-}
-
-function listenToUserCart(userId) {
-    if (typeof firebase !== 'undefined' && firebase.firestore) {
-        firebase.firestore().collection('users').doc(userId).collection('cart').onSnapshot(snapshot => {
-            updateCartBadgeCount(snapshot.size);
         });
     }
-}
-
-function updateCartBadgeCount(count) {
-    const cartCountEl = document.querySelector('.cart-count') || document.getElementById('cart-count');
-    if (cartCountEl) {
-        cartCountEl.textContent = count;
-    }
-}
+});
