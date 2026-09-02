@@ -3,13 +3,15 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
 
 /* Header Styling (Daraz Orange Theme) */
 .main-header { display: flex; align-items: center; justify-content: space-between; background: #ff6801; color: white; padding: 10px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); flex-wrap: wrap; gap: 15px; }
-.logo { font-size: 24px; font-weight: 800; color: #fff; }
-.logo span { color: #ffe600; }
+
+/* Perfect Logo Styling */
+.logo { font-size: 26px; font-weight: 900; color: #ffffff; letter-spacing: -0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+.logo span { color: #111827; background: #ffffff; padding: 2px 8px; border-radius: 6px; margin-left: 4px; display: inline-block; font-size: 22px; font-weight: 800; }
 
 /* Navigation Bar */
 .nav-bar { margin-right: auto; margin-left: 30px; }
 .nav-bar a { color: #ffffff; text-decoration: none; margin-right: 18px; font-size: 14px; font-weight: 600; transition: 0.3s; }
-.nav-bar a:hover { color: #ffe600; }
+.nav-bar a:hover { color: #111827; }
 
 /* Right Tools Control */
 .header-right-tools { display: flex; align-items: center; gap: 20px; }
@@ -22,7 +24,7 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
 .header-cart-item { display: flex; align-items: flex-end; color: #ffffff; text-decoration: none; gap: 5px; padding: 5px; border: 1px solid transparent; border-radius: 4px; }
 .header-cart-item:hover { border-color: #ffffff; background: rgba(255, 255, 255, 0.15); }
 .cart-icon-wrap { position: relative; font-size: 24px; }
-.cart-count { position: absolute; top: -2px; left: 10px; color: #ffe600; font-weight: bold; font-size: 14px; }
+.cart-count { position: absolute; top: -2px; left: 10px; color: #111827; font-weight: bold; font-size: 14px; background: #fff; padding: 0 4px; border-radius: 50%; }
 .cart-label { font-weight: bold; font-size: 13px; margin-bottom: 2px; }
 
 /* Search Container */
@@ -78,37 +80,56 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
 .product-card .buy-btn { background: #ff6801; color: #fff; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; display: block; transition: 0.2s; }
 .product-card .buy-btn:hover { background: #e65c00; }
 
-/* Footer Styling (Daraz Orange Theme) */
-.main-footer { background: #ff6801; color: #ffffff; padding: 40px 20px 20px; margin-top: 50px; }
+/* Footer Styling (Restored to Dark Dark-Gray/Black Theme) */
+.main-footer { background: #111827; color: #9ca3af; padding: 40px 20px 20px; margin-top: 50px; }
 .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-.footer-sec h3 { color: #ffffff; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid rgba(255, 255, 255, 0.3); padding-bottom: 5px; display: inline-block; }
-.footer-sec p { font-size: 14px; line-height: 1.6; color: #ffffff; }
+.footer-sec h3 { color: white; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #ff6801; padding-bottom: 5px; display: inline-block; }
+.footer-sec p { font-size: 14px; line-height: 1.6; }
 
-/* Contact Items Styling - White Container with Orange Text & Links */
+/* Contact Items Styling */
 .contact-item {
-    background: #ffffff;
-    padding: 8px 12px;
+    background: #1f2937;
+    padding: 10px 14px;
     border-radius: 6px;
     margin-top: 8px;
-    color: #ff6801 !important;
-    font-weight: 600;
+    color: #e5e7eb;
+    font-size: 13px;
+    border: 1px solid #374151;
 }
 .contact-item strong {
-    color: #ff6801 !important;
+    color: #ff6801;
 }
 .contact-item a {
     color: #ff6801 !important;
     text-decoration: underline;
-    font-weight: 700;
-    transition: 0.2s;
+    font-weight: 600;
 }
 .contact-item a:hover {
-    color: #d95300 !important;
+    color: #ffa05c !important;
 }
 
-.footer-bottom { text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.3); margin-top: 30px; padding-top: 20px; font-size: 13px; color: #ffffff; }
-.developer-credit { margin-top: 8px; font-size: 14px; font-weight: bold; color: #ffffff; }
-.developer-credit span { background: #ffffff; color: #ff6801; padding: 2px 8px; border-radius: 4px; font-weight: 800; font-size: 15px; }
+.footer-bottom { text-align: center; border-top: 1px solid #374151; margin-top: 30px; padding-top: 20px; font-size: 13px; color: #9ca3af; }
+
+/* Beautiful Developer Credit Banner Styling */
+.developer-credit {
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #9ca3af;
+    display: inline-block;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+}
+.developer-credit span {
+    color: #ff6801;
+    font-weight: 800;
+    font-size: 15px;
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+}
 
 /* Mobile Responsive */
 @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
