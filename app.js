@@ -17,7 +17,7 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) {
 const auth = (typeof firebase !== 'undefined') ? firebase.auth() : null;
 const db = (typeof firebase !== 'undefined') ? firebase.firestore() : null;
 
-// Global Open/Close Functions for HTML onclick attributes
+// Global Open/Close Modal Functions
 function openAuthModal() {
     const authModal = document.getElementById('auth-modal');
     if (authModal) {
@@ -32,24 +32,26 @@ function closeAuthModal() {
     }
 }
 
-// ৩. DOM Content Loaded (একক ইভেন্ট লিসেনার)
+// Global Product Array for Search
+let currentLoadedProducts = [];
+
+// ৩. DOM Content Loaded (প্রধান ইভেন্ট)
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- A. PRODUCT DISPLAY & SEARCH ---
-    const productList = document.getElementById('product-list');
-    let allProducts = JSON.parse(localStorage.getItem('rbm_products')) || [];
+    // --- A. PRODUCT DISPLAY & REAL-TIME LOAD FROM FIREBASE ---
+    const productList = document.getElementById('product-list') || document.querySelector('.product-grid');
 
     function displayProducts(productsToRender) {
         if (!productList) return;
         if (!productsToRender || productsToRender.length === 0) {
-            productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No products found!</p>';
+            productList.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">কোনো প্রোডাক্ট পাওয়া যায়নি!</p>';
         } else {
             productList.innerHTML = productsToRender.map(product => `
                 <div class="product-card">
-                    <img src="${product.image}" alt="${product.title}" onerror="this.src='https://via.placeholder.com/150'">
-                    <h3>${product.title}</h3>
-                    <p class="price">${product.price}</p>
-                    <a href="${product.link}" target="_blank" class="buy-btn">Buy on Amazon</a>
+                    <img src="${product.image || product.img}" alt="${product.title || product.name}" onerror="this.src='https://via.placeholder.com/150'">
+                    <h3>${product.title || product.name}</h3>
+                    <p class="price">৳${product.price}</p>
+                    <button class="buy-btn" onclick="addToCart('${product.id}', '${product.title || product.name}', '${product.price}', '${product.image || product.img}')">Add to Cart</button>
                 </div>
             `).join('');
         }
@@ -57,32 +59,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Firestore রিয়েল-টাইম ডাটা লোড
     if (db) {
-        db.collection("products").onSnapshot((snapshot) => {
+        db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
             let products = [];
             snapshot.forEach((doc) => {
                 products.push({ id: doc.id, ...doc.data() });
             });
-            if (products.length > 0) {
-                displayProducts(products);
-            } else {
-                displayProducts(allProducts);
-            }
+            currentLoadedProducts = products;
+            displayProducts(products);
         }, (error) => {
             console.error("প্রোডাক্ট লোড করতে সমস্যা:", error);
-            displayProducts(allProducts);
+            const localProducts = JSON.parse(localStorage.getItem('rbm_products')) || [];
+            displayProducts(localProducts);
         });
-    } else {
-        displayProducts(allProducts);
     }
 
-    // Search
+    // Search Feature
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
 
     function filterProducts() {
         if (!searchInput) return;
         const query = searchInput.value.toLowerCase();
-        const filtered = allProducts.filter(p => p.title.toLowerCase().includes(query));
+        const filtered = currentLoadedProducts.filter(p => 
+            (p.title && p.title.toLowerCase().includes(query)) || 
+            (p.name && p.name.toLowerCase().includes(query))
+        );
         displayProducts(filtered);
     }
 
@@ -113,33 +114,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- C. ADMIN PANEL CONTROLS ---
+    // --- C. ADMIN PANEL CONTROLS (Add Product to Cloud) ---
     const pForm = document.getElementById('admin-product-form');
     if (pForm) {
         pForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const newP = {
-                title: document.getElementById('p-title').value,
-                price: document.getElementById('p-price').value,
-                image: document.getElementById('p-image').value,
-                link: document.getElementById('p-link').value,
-            };
+            const title = document.getElementById('p-title').value;
+            const price = document.getElementById('p-price').value;
+            const image = document.getElementById('p-image').value;
+            const link = document.getElementById('p-link') ? document.getElementById('p-link').value : '';
+
+            const newP = { title, price, image, link };
 
             if (db) {
                 db.collection("products").add({
                     ...newP,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 }).then(() => {
-                    alert('Product Added to Cloud Successfully!');
+                    alert('প্রোডাক্ট সফলভাবে ক্লাউড ডাটাবেজে যুক্ত হয়েছে!');
                     pForm.reset();
                 }).catch(err => alert("Error adding product: " + err.message));
             } else {
                 newP.id = Date.now();
-                allProducts.push(newP);
-                localStorage.setItem('rbm_products', JSON.stringify(allProducts));
-                alert('Product Added Successfully!');
+                let localProducts = JSON.parse(localStorage.getItem('rbm_products')) || [];
+                localProducts.push(newP);
+                localStorage.setItem('rbm_products', JSON.stringify(localProducts));
+                alert('Product Added Locally!');
                 pForm.reset();
-                displayProducts(allProducts);
+                displayProducts(localProducts);
             }
         });
     }
@@ -267,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// ৪. ইউজারের স্ট্যাটাস অনুযায়ী হেডারের নাম আপডেট
+// ৪. ইউজারের স্ট্যাটাস অনুযায়ী হেডারের নাম ও কার্ট আপডেট (AUTH LISTENER)
 if (auth) {
     auth.onAuthStateChanged((user) => {
         const userText = document.getElementById('user-display-name');
@@ -283,147 +285,54 @@ if (auth) {
                     if (userText) userText.innerText = `Hello, ${user.email.split('@')[0]}`;
                 });
             }
+            listenToUserCart(user.uid);
         } else {
             if (userText) userText.innerText = 'Hello, sign in';
+            updateCartBadgeCount(0);
         }
     });
 }
 
-// ৫. টেস্ট ফাংশনস
-function testSignUp() {
-    if (!auth) return;
-    const email = document.getElementById("testEmail").value;
-    const password = document.getElementById("testPassword").value;
 
-    if(!email || !password) {
-        alert("ইমেইল ও পাসওয়ার্ড লিখুন!");
+// ৫. অ্যাকাউন্ট ভিত্তিক ফায়ারবেস কার্ট সিস্টেম (USER-BASED CLOUD CART)
+
+// কার্টে প্রোডাক্ট যোগ করা (ফায়ারবেস ডাটাবেজে সেভ হবে)
+function addToCart(id, title, price, image) {
+    if (!auth || !auth.currentUser) {
+        alert("প্রোডাক্ট কার্টে যোগ করার জন্য দয়া করে আগে লগইন করুন!");
+        openAuthModal();
         return;
     }
 
-    auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            alert("অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! User ID: " + userCredential.user.uid);
-        })
-        .catch((error) => {
-            alert("ত্রুটি: " + error.message);
-        });
-}
-
-function testSaveData() {
-    if (!auth || !db) return;
     const user = auth.currentUser;
+    const cartItemRef = db.collection('users').doc(user.uid).collection('cart').doc(id);
 
-    if (user) {
-        db.collection("users").doc(user.uid).set({
-            storeName: "RBMN Store",
-            cart: ["Product A", "Product B"],
-            userEmail: user.email,
-            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-        })
-        .then(() => {
-            alert("অভিনন্দন! ডাটা ফায়ারবেসে সফলভাবে সেভ হয়েছে।");
-        })
-        .catch((error) => {
-            alert("ডাটা সেভ হতে সমস্যা: " + error.message);
-        });
-    } else {
-        alert("আগে ১ নম্বর বাটনে চাপ দিয়ে একাউন্ট তৈরি বা লগইন করুন!");
+    cartItemRef.set({
+        productId: id,
+        title: title,
+        price: price,
+        image: image,
+        addedAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(() => {
+        alert('প্রোডাক্টটি সফলভাবে আপনার অ্যাকাউন্টের কার্টে সেভ হয়েছে!');
+    }).catch(err => {
+        alert('কার্টে যোগ করতে সমস্যা হয়েছে: ' + err.message);
+    });
+}
+
+// ইউজারের কার্ট আইটেম কাউন্ট রিয়েল-টাইমে জানা
+function listenToUserCart(userId) {
+    if (!db) return;
+    db.collection('users').doc(userId).collection('cart').onSnapshot(snapshot => {
+        const cartCount = snapshot.size;
+        updateCartBadgeCount(cartCount);
+    });
+}
+
+// কার্ট কাউন্ট হেডার ব্যাজে শো করানো
+function updateCartBadgeCount(count) {
+    const cartCountEl = document.querySelector('.cart-count') || document.getElementById('cart-count');
+    if (cartCountEl) {
+        cartCountEl.textContent = count;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// ১. প্রোডাক্ট লোড ও ডিসপ্লে করার সিস্টেম (Dynamic Product System)
-const defaultProducts = [
-    { id: 1, name: "Premium Smart Watch", price: 1200, img: "https://via.placeholder.com/150" },
-    { id: 2, name: "Wireless Bluetooth Earbuds", price: 850, img: "https://via.placeholder.com/150" },
-    { id: 3, name: "Casual Running Shoes", price: 1500, img: "https://via.placeholder.com/150" }
-];
-
-// ওয়েবসাইট লোড হলে প্রোডাক্ট ডেটাবেজ চেক করা
-function initProducts() {
-    let products = JSON.parse(localStorage.getItem('admin_products'));
-    if (!products) {
-        localStorage.setItem('admin_products', JSON.stringify(defaultProducts));
-        products = defaultProducts;
-    }
-    renderProducts(products);
-}
-
-// প্রোডাক্ট নতুন আপলোড বা যুক্ত করার ফংশন (Admin Upload)
-function addNewProduct(name, price, img) {
-    let products = JSON.parse(localStorage.getItem('admin_products')) || [];
-    const newProduct = { id: Date.now(), name, price, img };
-    products.push(newProduct);
-    localStorage.setItem('admin_products', JSON.stringify(products));
-    renderProducts(products);
-}
-
-// ওয়েবসাইট গ্রিডে সব প্রোডাক্ট প্রদর্শন
-function renderProducts(products) {
-    const grid = document.querySelector('.product-grid');
-    if(!grid) return;
-    grid.innerHTML = products.map(p => `
-        <div class="product-card">
-            <img src="${p.img}" alt="${p.name}">
-            <h3>${p.name}</h3>
-            <div class="price">৳${p.price}</div>
-            <button class="buy-btn" onclick="addToCart(${p.id})">Add to Cart</button>
-        </div>
-    `).join('');
-}
-
-// ২. অ্যাকাউন্ট অনুয়ায়ি কার্ট (User Account-Based Cart System)
-
-// কারেন্ট ইউজারের ইমেইল পাওয়া
-function getCurrentUser() {
-    const loggedInUser = JSON.parse(localStorage.getItem('current_user'));
-    return loggedInUser ? loggedInUser.email : 'guest_user';
-}
-
-// প্রোডাক্ট কার্টে যোগ করা (ইউজার ভিত্তিক সেভ হবে)
-function addToCart(productId) {
-    const userEmail = getCurrentUser();
-    const products = JSON.parse(localStorage.getItem('admin_products')) || [];
-    const product = products.find(p => p.id === productId);
-    
-    let userCart = JSON.parse(localStorage.getItem(`cart_${userEmail}`)) || [];
-    userCart.push(product);
-    
-    localStorage.setItem(`cart_${userEmail}`, JSON.stringify(userCart));
-    updateCartBadge();
-    alert('প্রোডাক্টটি আপনার অ্যাকাউন্টের কার্টে যোগ হয়েছে!');
-}
-
-// ইউজারের কার্ট কাউন্ট (Badge) আপডেট
-function updateCartBadge() {
-    const userEmail = getCurrentUser();
-    const userCart = JSON.parse(localStorage.getItem(`cart_${userEmail}`)) || [];
-    const cartCountEl = document.querySelector('.cart-count');
-    if(cartCountEl) {
-        cartCountEl.textContent = userCart.length;
-    }
-}
-
-// কার্ট পেজে ক্লিক করলে নির্দিষ্ট ইউজারের প্রোডাক্ট শো করা
-function showMyCart() {
-    const userEmail = getCurrentUser();
-    const userCart = JSON.parse(localStorage.getItem(`cart_${userEmail}`)) || [];
-    console.log(`${userEmail} এর সেভ হওয়া কার্ট প্রোডাক্ট:`, userCart);
-    // এখানে কার্ট পপ-আপ বা পেজে userCart এর লিস্ট শো করাতে পারবেন
-}
-
-// ওয়েবসাইট চালুর সময় রান হবে
-document.addEventListener("DOMContentLoaded", () => {
-    initProducts();
-    updateCartBadge();
-});
