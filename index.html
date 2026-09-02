@@ -1,207 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RBM STORE - Premium Shopping</title>
+    <title>RBM STORE</title>
     <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Top Header -->
-    <header class="main-header">
-        <!-- ১. লোগো -->
-        <div class="logo">RBM <span>STORE</span></div>
 
-        <!-- ২. নেভিগেশন লিংক -->
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="logo">
+            RBM <span>STORE</span>
+        </div>
+
         <nav class="nav-bar">
-            <a href="index.html">Home</a>
-            <a href="#about">About Us</a>
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#contact">Contact</a>
+            <a href="#">Home</a>
+            <a href="#">Shop</a>
+            <a href="#">Categories</a>
         </nav>
 
-        <!-- Country Select Dropdown -->
-        <select id="country-select" class="country-dropdown">
-            <option value="ALL">All Countries</option>
-            <option value="BD" selected>Bangladesh 🇧🇩</option>
-            <option value="US">United States 🇺🇸</option>
-            <option value="GB">United Kingdom 🇬🇧</option>
-            <option value="IN">India 🇮🇳</option>
-        </select>
-
-        <!-- ৩. বড় ও রেসপন্সিভ সার্চ বার -->
+        <!-- Big Search Container -->
         <div class="search-container">
-            <input type="text" id="search-input" placeholder="Search products on RBM Store...">
-            <button id="search-btn">Search</button>
+            <select class="country-dropdown">
+                <option value="BD">Bangladesh</option>
+                <option value="US">Global</option>
+            </select>
+            <input type="text" id="search-input" placeholder="Search products, brands, and categories...">
+            <button id="search-btn"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
         </div>
-            
-        <!-- ৪. ডানপাশের অপশনগুলো -->
+
         <div class="header-right-tools">
-            <a href="javascript:void(0)" class="header-nav-item" id="auth-trigger-btn" onclick="openAuthModal()">
-                <span class="nav-line-1" id="user-display-name">Hello, sign in</span>
-                <span class="nav-line-2" id="user-sub-status">Account & Lists ▾</span>
-            </a>
-            <a href="#" class="header-nav-item">
-                <span class="nav-line-1">Returns</span>
-                <span class="nav-line-2">& Orders</span>
-            </a>
-            <a href="#" class="header-cart-item">
+            <div class="header-nav-item" onclick="openAuthModal()">
+                <span class="nav-line-1" id="user-display-name">Hello, Sign in</span>
+                <span class="nav-line-2">Account & Lists</span>
+            </div>
+
+            <div class="header-cart-item">
                 <div class="cart-icon-wrap">
-                    🛒
+                    <i class="fa-solid fa-cart-shopping"></i>
                     <span class="cart-count" id="cart-count">0</span>
                 </div>
                 <span class="cart-label">Cart</span>
-            </a>
+            </div>
         </div>
     </header>
 
-    <!-- Site Body Layout -->
+    <!-- Main Content -->
     <div class="site-container">
-        <!-- Left Side Vertical Navigation Frame -->
         <aside class="side-nav">
             <h3>Categories</h3>
-            <ul id="sidebar-menu">
-                <li><a href="javascript:void(0)" onclick="filterCategory('ALL')">ALL PRODUCTS</a></li>
-                <li><a href="javascript:void(0)" onclick="filterCategory('BRAKING ITEM')">BRAKING ITEM</a></li>
-                <li><a href="javascript:void(0)" onclick="filterCategory('GUDET')">GUDET</a></li>
+            <ul>
+                <li><a href="#">Electronics</a></li>
+                <li><a href="#">Fashion</a></li>
+                <li><a href="#">Home Appliances</a></li>
+                <li><a href="#">Sports & Outdoors</a></li>
             </ul>
         </aside>
 
-        <!-- Main Product Section -->
         <main class="content-area">
-            <h2 class="section-title">Featured Products</h2>
-            <div id="product-list" class="product-grid">
-                <p class="loading-text">Loading products...</p>
+            <h2 class="section-title">All Products</h2>
+            <div class="product-grid" id="product-list">
+                <!-- Products will load dynamically from Firebase -->
             </div>
         </main>
     </div>
 
-    <!-- Footer Section -->
-    <footer class="main-footer">
-        <div class="footer-content">
-            <div class="footer-sec" id="about">
-                <h3>About Us</h3>
-                <p id="footer-about-text">Welcome to RBM STORE. We curate top deals directly from Amazon for your daily needs.</p>
-            </div>
-            <div class="footer-sec" id="privacy">
-                <h3>Privacy Policy</h3>
-                <p id="footer-privacy-text">We respect your privacy. As an Amazon Associate, we earn from qualifying purchases with zero extra cost to you.</p>
-            </div>
-            <div class="footer-sec" id="contact">
-                <h3>Contact Us</h3>
-                <div class="contact-item">
-                    <span class="contact-icon">📞</span>
-                    <span><strong>Phone:</strong> <a href="tel:01909650660">+8801909650660</a></span>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-icon">✉️</span>
-                    <span><strong>Gmail:</strong> <a href="mailto:josephjonyrego@gmail.com">josephjonyrego@gmail.com</a></span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer-bottom">
-            <p>&copy; 2026 RBM STORE. All Rights Reserved.</p>
-            <p class="developer-credit">A Website Created by <span>Sagar Anthony Dcruze</span></p>
-        </div>
-    </footer>
-
-    <!-- Login / Register Modal -->
-    <div id="auth-modal" class="modal-overlay">
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="auth-modal">
         <div class="modal-box">
-            <span class="close-btn" id="close-modal-btn" onclick="closeAuthModal()">&times;</span>
-            
+            <span class="close-btn" onclick="closeAuthModal()">&times;</span>
             <div class="auth-tabs">
-                <button id="tab-login-btn" class="active" type="button" onclick="switchTab('login')">Sign In</button>
-                <button id="tab-register-btn" type="button" onclick="switchTab('register')">Create Account</button>
+                <button class="active" id="login-tab-btn" onclick="switchAuthTab('login')">Login</button>
+                <button id="register-tab-btn" onclick="switchAuthTab('register')">Register</button>
             </div>
 
             <!-- Login Form -->
-            <form id="login-form" class="auth-form">
-                <h3>Welcome Back! 👋</h3>
+            <form class="auth-form" id="login-form">
+                <h3>Welcome Back</h3>
                 <div class="input-group">
-                    <label for="login-email">Email Address</label>
-                    <input type="email" id="login-email" placeholder="name@example.com" required>
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" required placeholder="Enter your email">
                 </div>
                 <div class="input-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" placeholder="••••••••" required>
+                    <label>Password</label>
+                    <input type="password" id="login-password" required placeholder="Enter password">
                 </div>
-                <button type="submit" class="auth-btn">Sign In to Your Account</button>
+                <button type="submit" class="auth-btn">Sign In</button>
             </form>
 
             <!-- Register Form -->
-            <form id="register-form" class="auth-form" style="display: none;">
-                <h3>Join Us Today 🚀</h3>
+            <form class="auth-form" id="register-form" style="display: none;">
+                <h3>Create Account</h3>
                 <div class="input-group">
-                    <label for="reg-name">Full Name</label>
-                    <input type="text" id="reg-name" placeholder="John Doe" required>
+                    <label>Full Name</label>
+                    <input type="text" id="reg-name" required placeholder="Your name">
                 </div>
                 <div class="input-group">
-                    <label for="reg-email">Email Address</label>
-                    <input type="email" id="reg-email" placeholder="name@example.com" required>
+                    <label>Email Address</label>
+                    <input type="email" id="reg-email" required placeholder="Enter email">
                 </div>
                 <div class="input-group">
-                    <label for="reg-password">Password</label>
-                    <input type="password" id="reg-password" placeholder="At least 6 characters" required>
+                    <label>Password</label>
+                    <input type="password" id="reg-password" required placeholder="Create password">
                 </div>
-                <button type="submit" class="auth-btn">Create Free Account</button>
+                <button type="submit" class="auth-btn">Register</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal Handler Helper JS -->
-    <script>
-        function openAuthModal() {
-            var modal = document.getElementById('auth-modal');
-            if(modal) {
-                modal.classList.add('active');
-                modal.style.display = 'flex';
-            }
-        }
-
-        function closeAuthModal() {
-            var modal = document.getElementById('auth-modal');
-            if(modal) {
-                modal.classList.remove('active');
-                modal.style.display = 'none';
-            }
-        }
-
-        function switchTab(tab) {
-            var loginForm = document.getElementById('login-form');
-            var regForm = document.getElementById('register-form');
-            var loginBtn = document.getElementById('tab-login-btn');
-            var regBtn = document.getElementById('tab-register-btn');
-
-            if(tab === 'login') {
-                loginForm.style.display = 'block';
-                regForm.style.display = 'none';
-                loginBtn.classList.add('active');
-                regBtn.classList.remove('active');
-            } else {
-                loginForm.style.display = 'none';
-                regForm.style.display = 'block';
-                regBtn.classList.add('active');
-                loginBtn.classList.remove('active');
-            }
-        }
-
-        window.onclick = function(event) {
-            var modal = document.getElementById('auth-modal');
-            if (event.target == modal) {
-                modal.classList.remove('active');
-                modal.style.display = 'none';
-            }
-        };
-    </script>
-
-    <!-- Firebase SDKs (Compat SDKs for smooth browser support) -->
+    <!-- Firebase SDKs (Compat Versions) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-    <!-- App Main Script -->
-    <script src="script.js"></script>
+    <!-- Main JavaScript -->
+    <script src="app.js"></script>
 </body>
 </html>
