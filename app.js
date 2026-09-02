@@ -330,3 +330,100 @@ function testSaveData() {
         alert("আগে ১ নম্বর বাটনে চাপ দিয়ে একাউন্ট তৈরি বা লগইন করুন!");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// ১. প্রোডাক্ট লোড ও ডিসপ্লে করার সিস্টেম (Dynamic Product System)
+const defaultProducts = [
+    { id: 1, name: "Premium Smart Watch", price: 1200, img: "https://via.placeholder.com/150" },
+    { id: 2, name: "Wireless Bluetooth Earbuds", price: 850, img: "https://via.placeholder.com/150" },
+    { id: 3, name: "Casual Running Shoes", price: 1500, img: "https://via.placeholder.com/150" }
+];
+
+// ওয়েবসাইট লোড হলে প্রোডাক্ট ডেটাবেজ চেক করা
+function initProducts() {
+    let products = JSON.parse(localStorage.getItem('admin_products'));
+    if (!products) {
+        localStorage.setItem('admin_products', JSON.stringify(defaultProducts));
+        products = defaultProducts;
+    }
+    renderProducts(products);
+}
+
+// প্রোডাক্ট নতুন আপলোড বা যুক্ত করার ফংশন (Admin Upload)
+function addNewProduct(name, price, img) {
+    let products = JSON.parse(localStorage.getItem('admin_products')) || [];
+    const newProduct = { id: Date.now(), name, price, img };
+    products.push(newProduct);
+    localStorage.setItem('admin_products', JSON.stringify(products));
+    renderProducts(products);
+}
+
+// ওয়েবসাইট গ্রিডে সব প্রোডাক্ট প্রদর্শন
+function renderProducts(products) {
+    const grid = document.querySelector('.product-grid');
+    if(!grid) return;
+    grid.innerHTML = products.map(p => `
+        <div class="product-card">
+            <img src="${p.img}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <div class="price">৳${p.price}</div>
+            <button class="buy-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+        </div>
+    `).join('');
+}
+
+// ২. অ্যাকাউন্ট অনুয়ায়ি কার্ট (User Account-Based Cart System)
+
+// কারেন্ট ইউজারের ইমেইল পাওয়া
+function getCurrentUser() {
+    const loggedInUser = JSON.parse(localStorage.getItem('current_user'));
+    return loggedInUser ? loggedInUser.email : 'guest_user';
+}
+
+// প্রোডাক্ট কার্টে যোগ করা (ইউজার ভিত্তিক সেভ হবে)
+function addToCart(productId) {
+    const userEmail = getCurrentUser();
+    const products = JSON.parse(localStorage.getItem('admin_products')) || [];
+    const product = products.find(p => p.id === productId);
+    
+    let userCart = JSON.parse(localStorage.getItem(`cart_${userEmail}`)) || [];
+    userCart.push(product);
+    
+    localStorage.setItem(`cart_${userEmail}`, JSON.stringify(userCart));
+    updateCartBadge();
+    alert('প্রোডাক্টটি আপনার অ্যাকাউন্টের কার্টে যোগ হয়েছে!');
+}
+
+// ইউজারের কার্ট কাউন্ট (Badge) আপডেট
+function updateCartBadge() {
+    const userEmail = getCurrentUser();
+    const userCart = JSON.parse(localStorage.getItem(`cart_${userEmail}`)) || [];
+    const cartCountEl = document.querySelector('.cart-count');
+    if(cartCountEl) {
+        cartCountEl.textContent = userCart.length;
+    }
+}
+
+// কার্ট পেজে ক্লিক করলে নির্দিষ্ট ইউজারের প্রোডাক্ট শো করা
+function showMyCart() {
+    const userEmail = getCurrentUser();
+    const userCart = JSON.parse(localStorage.getItem(`cart_${userEmail}`)) || [];
+    console.log(`${userEmail} এর সেভ হওয়া কার্ট প্রোডাক্ট:`, userCart);
+    // এখানে কার্ট পপ-আপ বা পেজে userCart এর লিস্ট শো করাতে পারবেন
+}
+
+// ওয়েবসাইট চালুর সময় রান হবে
+document.addEventListener("DOMContentLoaded", () => {
+    initProducts();
+    updateCartBadge();
+});
