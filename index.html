@@ -386,6 +386,7 @@
             var modal = document.getElementById('auth-modal');
             if(modal) {
                 modal.classList.add('active');
+                modal.style.display = 'flex';
             }
         }
 
@@ -393,14 +394,15 @@
             var modal = document.getElementById('auth-modal');
             if(modal) {
                 modal.classList.remove('active');
+                modal.style.display = 'none';
             }
         }
 
-        // বাহিরে ক্লিক করলে মডাল বন্ধ হবে
         window.onclick = function(event) {
             var modal = document.getElementById('auth-modal');
             if (event.target == modal) {
                 modal.classList.remove('active');
+                modal.style.display = 'none';
             }
         };
     </script>
@@ -410,7 +412,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-    <!-- App Logic -->
+    <!-- App Logic Links (script.js and app.js fallback) -->
+    <script src="script.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
