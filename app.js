@@ -1,17 +1,17 @@
 // ১. ফায়ারবেস কনফিগারেশন
 const firebaseConfig = {
-  apiKey: "AIzaSyA7itgqaCU1EZAgfO-SccODzDEBvSP5nEE",
-  authDomain: "rbm-store-458c8.firebaseapp.com",
-  projectId: "rbm-store-458c8",
-  storageBucket: "rbm-store-458c8.firebasestorage.app",
-  messagingSenderId: "415572875433",
-  appId: "1:415572875433:web:e2b856af421b636bb271b8",
-  measurementId: "G-GDR5R78Y6D"
+    apiKey: "AIzaSyA7itgqaCU1EZAgfO-SccODzDEBvSP5nEE",
+    authDomain: "rbm-store-458c8.firebaseapp.com",
+    projectId: "rbm-store-458c8",
+    storageBucket: "rbm-store-458c8.firebasestorage.app",
+    messagingSenderId: "415572875433",
+    appId: "1:415572875433:web:e2b856af421b636bb271b8",
+    measurementId: "G-GDR5R78Y6D"
 };
 
 // ২. Firebase ইনিশিয়ালাইজেশন
 if (typeof firebase !== 'undefined' && !firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
 }
 
 let currentLoadedProducts = [];
