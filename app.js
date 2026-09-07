@@ -330,3 +330,42 @@ function testSaveData() {
         alert("আগে ১ নম্বর বাটনে চাপ দিয়ে একাউন্ট তৈরি বা লগইন করুন!");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Google Sign-In Handler
+function signInWithGoogle() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    
+    firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            const user = result.user;
+            
+            // ফায়ারবেস ফায়ারস্টোর ডাটাবেজে ইউজার সেভ করা
+            return firebase.firestore().collection('users').doc(user.uid).set({
+                name: user.displayName || "Google User",
+                email: user.email,
+                photoURL: user.photoURL,
+                provider: "google.com",
+                lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        })
+        .then(() => {
+            alert("Google দিয়ে সফলভাবে লগইন হয়েছে!");
+            if(typeof closeAuthModal === 'function') closeAuthModal();
+        })
+        .catch((error) => {
+            console.error("Google Sign-In Error:", error);
+            alert("লগইন ব্যর্থ হয়েছে: " + error.message);
+        });
+}
