@@ -307,5 +307,5 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
     display: flex;
     justify-content: center; /* পাশাপাশি মাঝখানে আনবে (Horizontal) */
     align-items: center;     /* উপর-নিচে মাঝখানে আনবে (Vertical) */
-    text-color: rgb(255, 0, 0);
+    color: rgb(255, 0, 0);
 }
