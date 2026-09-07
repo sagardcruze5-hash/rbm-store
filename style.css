@@ -104,19 +104,79 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
 .side-nav ul li a { text-decoration: none; color: #4b5563; font-weight: 500; font-size: 14px; transition: 0.2s; display: block; }
 .side-nav ul li a:hover { color: #ff6801; transform: translateX(5px); }
 
-/* Main Content Grid */
+/* Main Content Area & Responsive Daraz Grid */
 .content-area { flex: 1; }
 .section-title { font-size: 22px; margin-bottom: 20px; color: #1f2937; border-bottom: 3px solid #ff6801; display: inline-block; padding-bottom: 5px; }
-.product-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px; }
 
-/* Product Box Styling */
-.product-card { background: white; border-radius: 10px; border: 1px solid #e5e7eb; padding: 12px; text-align: center; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
-.product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-.product-card img { width: 100%; height: 130px; object-fit: contain; border-radius: 6px; margin-bottom: 10px; }
-.product-card h3 { font-size: 13px; margin-bottom: 8px; line-height: 1.3; color: #111827; height: 34px; overflow: hidden; }
-.product-card .price { font-size: 15px; font-weight: 700; color: #059669; margin-bottom: 10px; }
-.product-card .buy-btn { background: #ff6801; color: #fff; text-decoration: none; padding: 8px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; display: block; transition: 0.2s; }
-.product-card .buy-btn:hover { background: #e65c00; }
+.product-grid, .product-container, #product-list { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); 
+    gap: 15px; 
+}
+
+/* Optimized Product Box Styling (Daraz Premium Look) */
+.product-card { 
+    background: white; 
+    border-radius: 8px; 
+    border: 1px solid #e5e7eb; 
+    padding: 12px; 
+    text-align: left; 
+    transition: transform 0.2s ease, box-shadow 0.2s ease; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+}
+
+.product-card:hover { 
+    transform: translateY(-4px); 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+}
+
+.product-card img { 
+    width: 100%; 
+    height: 160px; 
+    object-fit: contain; 
+    background-color: #f9fafb;
+    border-radius: 6px; 
+    margin-bottom: 10px; 
+}
+
+.product-card h3 { 
+    font-size: 13px; 
+    font-weight: 600;
+    margin-bottom: 8px; 
+    line-height: 1.3; 
+    color: #111827; 
+    height: 34px; 
+    overflow: hidden; 
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product-card .price { 
+    font-size: 16px; 
+    font-weight: 700; 
+    color: #ff6801; 
+    margin-bottom: 10px; 
+}
+
+.product-card .buy-btn { 
+    background: #ff6801; 
+    color: #fff; 
+    text-decoration: none; 
+    padding: 8px 12px; 
+    border-radius: 6px; 
+    font-weight: 600; 
+    font-size: 13px; 
+    text-align: center;
+    display: block; 
+    transition: background 0.2s ease; 
+}
+
+.product-card .buy-btn:hover { 
+    background: #e65c00; 
+}
 
 /* Footer Styling (Dark Theme) */
 .main-footer { background: #111827; color: #9ca3af; padding: 40px 20px 20px; margin-top: 50px; }
@@ -161,12 +221,24 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
     letter-spacing: 0.5px;
 }
 
-/* Mobile Responsive */
-@media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+/* Mobile Responsive Adjustments (Daraz 2-Column Grid) */
+@media (max-width: 1200px) { 
+    .product-grid, .product-container, #product-list { grid-template-columns: repeat(4, 1fr); } 
+}
+
 @media (max-width: 768px) { 
-    .site-container { flex-direction: column; } 
+    .site-container { flex-direction: column; margin: 15px auto; width: 98%; } 
     .side-nav { width: 100%; } 
-    .product-grid { grid-template-columns: repeat(2, 1fr); } 
+    .product-grid, .product-container, #product-list { 
+        grid-template-columns: repeat(2, 1fr) !important; 
+        gap: 10px; 
+    } 
+    .product-card { padding: 8px; }
+    .product-card img { height: 130px; }
+    .product-card h3 { font-size: 12px; }
+    .product-card .price { font-size: 14px; }
+    .product-card .buy-btn { font-size: 11px; padding: 6px; }
+
     .header-right-tools { gap: 8px; }
     .nav-line-1 { display: none; }
 }
@@ -294,18 +366,11 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
     background: linear-gradient(135deg, #059669, #065f46) !important;
 }
 
-
 .auth-btn:active { transform: translateY(0) !important; }
-
-
-
-
-
-
 
 .owner {
     display: flex;
-    justify-content: center; /* পাশাপাশি মাঝখানে আনবে (Horizontal) */
-    align-items: center;     /* উপর-নিচে মাঝখানে আনবে (Vertical) */
+    justify-content: center; 
+    align-items: center; 
     color: rgb(255, 0, 0);
 }
