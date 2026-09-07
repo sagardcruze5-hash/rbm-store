@@ -11,15 +11,15 @@
         .admin-card h2 { margin-bottom: 15px; color: #111827; border-bottom: 2px solid #f59e0b; padding-bottom: 8px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .btn-submit { background: #f59e0b; color: #111; font-weight: bold; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .btn-submit { background: #f59e0b; color: #111; font-weight: bold; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
         .btn-submit:hover { background: #d97706; color: white; }
     </style>
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo">RBM <span>STORE Panel</span></div>
-        <a href="index.html" style="color:white; text-decoration:none;">View Website</a>
+    <header class="main-header" style="background:#111827; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; color:white;">
+        <div class="logo" style="font-size:20px; font-weight:bold;">RBM <span style="color:#f59e0b;">STORE Panel</span></div>
+        <a href="index.html" style="color:white; text-decoration:none; font-weight:bold;">View Website ↗</a>
     </header>
 
     <div class="admin-container">
@@ -32,8 +32,8 @@
                     <input type="text" id="p-title" required placeholder="e.g. Wireless Headset">
                 </div>
                 <div class="form-group">
-                    <label>Price</label>
-                    <input type="text" id="p-price" required placeholder="e.g. $40 or ৳4500">
+                    <label>Price (Number)</label>
+                    <input type="number" id="p-price" required placeholder="e.g. 40 or 4500">
                 </div>
                 <div class="form-group">
                     <label>Image URL</label>
@@ -43,7 +43,7 @@
                     <label>Amazon Affiliate Link</label>
                     <input type="url" id="p-link" required placeholder="https://amazon.com/dp/...">
                 </div>
-                <button type="submit" class="btn-submit">➕ Upload Product</button>
+                <button type="submit" id="prod-btn" class="btn-submit">➕ Upload Product</button>
             </form>
         </div>
 
@@ -59,7 +59,7 @@
                     <label>Link URL</label>
                     <input type="text" id="nav-url" required placeholder="e.g. #gaming or custom link">
                 </div>
-                <button type="submit" class="btn-submit" style="background:#3b82f6; color:white;">➕ Add Link</button>
+                <button type="submit" id="nav-btn" class="btn-submit" style="background:#3b82f6; color:white;">➕ Add Link</button>
             </form>
         </div>
 
@@ -79,11 +79,110 @@
                     <label>Contact Us Text</label>
                     <textarea id="foot-contact" rows="2"></textarea>
                 </div>
-                <button type="submit" class="btn-submit" style="background:#10b981; color:white;">💾 Save Footer Updates</button>
+                <button type="submit" id="foot-btn" class="btn-submit" style="background:#10b981; color:white;">💾 Save Footer Updates</button>
             </form>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Firebase SDKs (v10.8.0 Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // ১. আপনার ফায়ারবেস কনফিগারেশন
+        const firebaseConfig = {
+            apiKey: "AIzaSyA7itgqaCU1EZAgfO-SccODzDEBvSP5nEE",
+            authDomain: "rbm-store-458c8.firebaseapp.com",
+            projectId: "rbm-store-458c8",
+            storageBucket: "rbm-store-458c8.firebasestorage.app",
+            messagingSenderId: "415572875433",
+            appId: "1:415572875433:web:e2b856af421b636bb271b8"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // ২. প্রোডাক্ট আপলোড করার ফংশন (Amazon Affiliate Link সহ)
+        document.getElementById('admin-product-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('prod-btn');
+            
+            const title = document.getElementById('p-title').value.trim();
+            const price = Number(document.getElementById('p-price').value);
+            const image = document.getElementById('p-image').value.trim();
+            const affiliateUrl = document.getElementById('p-link').value.trim();
+
+            btn.disabled = true;
+            btn.innerText = "Uploading Product...";
+
+            db.collection("products").add({
+                title: title,
+                price: price,
+                image: image,
+                affiliateUrl: affiliateUrl,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert("✅ প্রোডাক্ট সফলভাবে ফায়ারবেসে আপলোড হয়েছে!");
+                this.reset();
+            })
+            .catch((error) => {
+                alert("❌ এরর হয়েছে: " + error.message);
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "➕ Upload Product";
+            });
+        });
+
+        // ৩. নেভিগেশন লিঙ্ক সেভ করার ফংশন
+        document.getElementById('admin-nav-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('nav-btn');
+            const title = document.getElementById('nav-title').value.trim();
+            const url = document.getElementById('nav-url').value.trim();
+
+            btn.disabled = true;
+            btn.innerText = "Adding Link...";
+
+            db.collection("nav_links").add({
+                title: title,
+                url: url,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert("✅ নেভিগেশন লিঙ্ক যোগ হয়েছে!");
+                this.reset();
+            })
+            .catch(error => alert("❌ এরর: " + error.message))
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "➕ Add Link";
+            });
+        });
+
+        // ৪. ফুটার কনটেন্ট আপডেট করার ফংশন
+        document.getElementById('admin-footer-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('foot-btn');
+            
+            btn.disabled = true;
+            btn.innerText = "Saving...";
+
+            db.collection("settings").doc("footer").set({
+                about: document.getElementById('foot-about').value.trim(),
+                privacy: document.getElementById('foot-privacy').value.trim(),
+                contact: document.getElementById('foot-contact').value.trim()
+            }, { merge: true })
+            .then(() => alert("✅ ফুটার আপডেট সফল হয়েছে!"))
+            .catch(error => alert("❌ এরর: " + error.message))
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "💾 Save Footer Updates";
+            });
+        });
+    </script>
 </body>
 </html>
