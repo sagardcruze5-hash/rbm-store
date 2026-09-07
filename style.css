@@ -304,6 +304,8 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
 
 
 .owner {
-    justify-content: conter:
-    text-align: 0auto 30px;
+    display: flex;
+    justify-content: center; /* পাশাপাশি মাঝখানে আনবে (Horizontal) */
+    align-items: center;     /* উপর-নিচে মাঝখানে আনবে (Vertical) */
+    height: 100vh;           /* প্রয়োজন অনুযায়ী হাইট সেট করুন */
 }
