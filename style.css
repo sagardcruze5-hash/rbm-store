@@ -294,4 +294,18 @@ html, body { margin: 0; padding: 0; height: 100%; background-color: #f4f6f9; col
     background: linear-gradient(135deg, #059669, #065f46) !important;
 }
 
+
+
+
+
+
+
+
+
+
+.owner {
+    justify-content: conter:
+    text-align: 0auto 30px;
+}
+
 .auth-btn:active { transform: translateY(0) !important; }
