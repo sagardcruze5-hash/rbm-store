@@ -369,3 +369,36 @@ function signInWithGoogle() {
             alert("লগইন ব্যর্থ হয়েছে: " + error.message);
         });
 }
+
+
+
+
+
+
+
+
+
+
+
+// ১. লগইন স্টেট চেক করা
+firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+        console.log("Logged in as:", user.email);
+        document.getElementById('admin-content').style.display = 'block';
+        document.getElementById('login-box').style.display = 'none';
+    } else {
+        document.getElementById('admin-content').style.display = 'none';
+        document.getElementById('login-box').style.display = 'block';
+    }
+});
+
+// ২. লগইন ফর্ম হ্যান্ডলার
+document.getElementById('admin-login-form')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('admin-email').value;
+    const pass = document.getElementById('admin-pass').value;
+
+    firebase.auth().signInWithEmailAndPassword(email, pass)
+        .then(() => alert("✅ লগইন সফল হয়েছে!"))
+        .catch((err) => alert("❌ ভুল ইমেইল বা পাসওয়ার্ড: " + err.message));
+});
